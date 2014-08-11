@@ -1,7 +1,7 @@
 <?php
 
 require_once('./simpletest/autorun.php');  
-require_once('../core/utilitiesSecret.php' );
+require_once('../core/utilities.php' );
 require_once('../core/userManagementCore.php' );
 
 class authenticateUserCoreTest extends UnitTestCase {
@@ -49,7 +49,7 @@ class authenticateUserCoreTest extends UnitTestCase {
                 $this->password);
             $this->fail( "No exception cought");
         } catch ( Exception $e ) {
-            $this->assertEqual( "Unknown user name", $e->getMessage() );
+            $this->assertEqual( "Unknown user name: n/a", $e->getMessage() );
         }        
     }
 

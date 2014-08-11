@@ -54,7 +54,7 @@ class UtilitiesTest extends UnitTestCase {
     }
     
     public function testGetOneValueFromDataBase() {
-        $query = 'SELECT email FROM whiteboard_users WHERE username=?';    
+        $query = 'SELECT email FROM masterpassword_users WHERE username=?';    
         $email = getOneValueFromDataBase($this->mysql, $query, $this->username);
         
         $this->assertEqual($email, $this->email);
@@ -71,7 +71,7 @@ class UtilitiesTest extends UnitTestCase {
     }
     
     public function testGetOneValueFromDataBaseNoData() {
-        $query = 'SELECT email FROM whiteboard_users WHERE username=?';    
+        $query = 'SELECT email FROM masterpassword_users WHERE username=?';    
         
         $value = getOneValueFromDataBase($this->mysql, $query, "n/a");
             

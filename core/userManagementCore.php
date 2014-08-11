@@ -1,11 +1,11 @@
 <?php
 
-require_once( dirname(__FILE__)."/licenseManagementCore.php");
+//require_once( dirname(__FILE__)."/licenseManagementCore.php");
 
 function insertUser($mysql, $username, $password, $verificationKey, $email) {
     $passwordCrypt = crypt($password);
 
-    $query = "INSERT INTO whiteboard_users (username, password, verificationKey, email)" .
+    $query = "INSERT INTO masterpassword_users (username, password, verificationKey, email)" .
             "VALUES (?, ?, ?, ?)";
 
     try {
@@ -23,10 +23,10 @@ function insertUser($mysql, $username, $password, $verificationKey, $email) {
             throw new Exception('Error closing statement');
         }
 
-        if (!autoExtendLicense($mysql, $email, 'NEW')) {
+        /*if (!autoExtendLicense($mysql, $email, 'NEW')) {
             //echo "Extending license. <br/>";
             throw new Exception("Error extending license");
-        }
+        }*/
         
         return mysqli_insert_id($mysql);        
         
@@ -37,7 +37,7 @@ function insertUser($mysql, $username, $password, $verificationKey, $email) {
 }
 
 function deleteUser($mysql, $username) {
-    $query = "DELETE FROM whiteboard_users WHERE username=?";
+    $query = "DELETE FROM masterpassword_users WHERE username=?";
     //echo $query . "<br/>";
     try {
         $stmt = $mysql->prepare($query);
@@ -60,7 +60,7 @@ function deleteUser($mysql, $username) {
 }
 
 function validateUser($mysql, $username) {
-    $query = "UPDATE whiteboard_users SET verificationKey='0' WHERE username=?";
+    $query = "UPDATE masterpassword_users SET verificationKey='0' WHERE username=?";
     //echo $query . "<br/>";
     try {
         $stmt = $mysql->prepare($query);
@@ -102,7 +102,7 @@ function changePassword($mysql, $username, $password) {
     $password = crypt($password);
     
     try {
-        $query = "UPDATE whiteboard_users SET password=? WHERE username=?";
+        $query = "UPDATE masterpassword_users SET password=? WHERE username=?";
 
         $stmt = $mysql->prepare($query);
 

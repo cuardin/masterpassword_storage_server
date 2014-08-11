@@ -2,7 +2,7 @@
 
 require_once('./simpletest/autorun.php');  
 require_once('./simpletest/web_tester.php');
-require_once('../core/utilitiesSecret.php' );
+require_once('../core/utilities.php' );
 require_once('../core/userManagementCore.php' );
 
 SimpleTest::prefer(new TextReporter());

@@ -10,7 +10,7 @@ and open the template in the editor.
     </head>
 
     <body>        
-        <form action="http://www.armyr.se/rightboard/php_scripts/changePassword.php" method="POST">
+        <form action="http://www.armyr.se/masterpassword/php_scripts/changePassword.php" method="POST">
             <table>
             <tr><td>Username:</td><td><input type="text" name="username"></td></tr>
             <tr><td>Old password:</td><td><input type="password" name="password"></td></tr>

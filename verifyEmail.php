@@ -38,7 +38,7 @@ try {
         throw new Exception( "Verification key did not match stored, personal or secret." );
     }
     
-    $stmt = $mysql->prepare("UPDATE whiteboard_users SET verificationKey='0' WHERE username=?");
+    $stmt = $mysql->prepare("UPDATE masterpassword_users SET verificationKey='0' WHERE username=?");
     if ( !$stmt ) {
         throw new Exception( "Error preparing SLQ statement" );
     }

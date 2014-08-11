@@ -13,7 +13,7 @@ try {
     //Check that credentials are good.
     if (authenticateUser($mysql, $username, $password)) {
         //And list the files
-        $stmt = $mysql->prepare("SELECT * FROM whiteboard_files WHERE username=?");
+        $stmt = $mysql->prepare("SELECT * FROM masterpassword_files WHERE username=?");
         if ( !$stmt ) {
             throw new Exception ();
         }

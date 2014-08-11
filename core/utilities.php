@@ -20,7 +20,7 @@ function authenticateUser($mysql, $username, $password) {
     //be leaked, but I do not care.
     $usernameStored = getOneValueFromUserList($mysql, "username", $username);
     if ( strcmp( $username, $usernameStored) ) {
-        throw new Exception ( "Unknown user name");
+        throw new Exception ( "Unknown user name: " . $username );
     }
     
     //Second check that the email has been verified.
@@ -40,7 +40,7 @@ function authenticateUser($mysql, $username, $password) {
     if (strcmp($passwordStored, $passwordCrypt)) {
         throw new Exception( "Wrong password" );
      }
-
+     /*
     //Finally, check that we have not expired
     $expirationDateString =
             getOneValueFromUserList($mysql, "expirationDate", $username);
@@ -51,12 +51,12 @@ function authenticateUser($mysql, $username, $password) {
         //echo ( 'FAIL: Account expired on ' . $expirationDateString . '.' );
         throw new Exception( "License expired" );
     }
-
+    */
     return true;
 }
 
 function getUserNameFromEmail($mysql, $email) {
-    $query = 'SELECT username FROM whiteboard_users WHERE email=?';
+    $query = 'SELECT username FROM masterpassword_users WHERE email=?';
     return getOneValueFromDataBase($mysql, $query, $email);
 }
 
@@ -64,7 +64,7 @@ function getOneValueFromUserList($mysql, $field, $username) {
     if (preg_match('/[^a-z]/i', $field)) {
         return null;
     }
-    $query = 'SELECT ' . $field . ' FROM whiteboard_users WHERE username=?';    
+    $query = 'SELECT ' . $field . ' FROM masterpassword_users WHERE username=?';    
     return getOneValueFromDataBase($mysql, $query, $username);
 }
 

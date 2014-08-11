@@ -2,6 +2,8 @@
 
 require_once('./simpletest/autorun.php');  
 require_once('./simpletest/web_tester.php');
+require_once('../core/utilities.php' );
+require_once('../core/userManagementCore.php' );
 SimpleTest::prefer(new TextReporter());
 
 class AuthenticateUserTest extends WebTestCase {
@@ -30,23 +32,23 @@ class AuthenticateUserTest extends WebTestCase {
     }
     
     public function tearDown() {        
-        deleteUser( $this->mysql, $this->username );
+        //deleteUser( $this->mysql, $this->username );
     }
 
     function testAuthenticateSimple() {
-        $this->get("http://rightboard.armyr.se/php_scripts/authenticateUser.php?" .
+        $this->get(getBaseURL() . "authenticateUser.php?" .
                 "username=$this->username&password=$this->password" );        
         $this->assertText('OK');                 
     }
     
     function testAuthenticateBadUserName() {
-        $this->get("http://rightboard.armyr.se/php_scripts/authenticateUser.php?" .
+        $this->get(getBaseURL() . "authenticateUser.php?" .
                 "username=--&password=$this->password" );        
         $this->assertText('FAIL');                 
     }
 
     function testAuthenticateBadPassword() {
-        $this->get("http://rightboard.armyr.se/php_scripts/authenticateUser.php?" .
+        $this->get(getBaseURL() . "authenticateUser.php?" .
                 "username=$this->username&password=--" );        
         $this->assertText('FAIL');                 
     }        

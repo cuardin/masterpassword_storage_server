@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/utilities.php');
 
 function insertFile($mysql, $username, $fileName, $fileContents) {
-    $query = "INSERT INTO whiteboard_files (fileKey, username, fileName, fileContents )" .
+    $query = "INSERT INTO masterpassword_files (fileKey, username, fileName, fileContents )" .
             "VALUES ('null', ?, ?, ?)";
 
     try {
@@ -27,7 +27,7 @@ function insertFile($mysql, $username, $fileName, $fileContents) {
 }
 
 function deleteFile($mysql, $fileID) {
-    $query = "DELETE FROM whiteboard_files WHERE fileKey=?";
+    $query = "DELETE FROM masterpassword_files WHERE fileKey=?";
 
     $stmt = $mysql->prepare($query);
     if ($stmt) {
@@ -43,7 +43,7 @@ function deleteFile($mysql, $fileID) {
 }
 
 function getNumberOfFilesBelongingToUser($mysql, $username) {
-    $stmt = $mysql->prepare("SELECT * FROM whiteboard_files WHERE username=?");
+    $stmt = $mysql->prepare("SELECT * FROM masterpassword_files WHERE username=?");
     if (!$stmt) {
         throw new Exception("SQL Syntax error");
     }
@@ -62,7 +62,7 @@ function getNumberOfFilesBelongingToUser($mysql, $username) {
 }
 
 function deleteAllFilesBelongingToUser($mysql, $username) {
-    $query = "DELETE FROM whiteboard_files WHERE username=?";
+    $query = "DELETE FROM masterpassword_files WHERE username=?";
     //echo $query . "<br/>";
     try {
         $stmt = $mysql->prepare($query);
@@ -85,7 +85,7 @@ function deleteAllFilesBelongingToUser($mysql, $username) {
 }
 
 function overwriteFile($mysql, $fileID, $fileContents) {
-    $query = "UPDATE whiteboard_files SET fileContents=? WHERE fileKey=?";
+    $query = "UPDATE masterpassword_files SET fileContents=? WHERE fileKey=?";
     //echo $query;
     try {
         $stmt = $mysql->prepare($query);
@@ -111,7 +111,7 @@ function getOneValueFromFileList($mysql, $field, $fileKey) {
     if (preg_match('/[^a-z]/i', $field)) {
         return null;
     }
-    $query = 'SELECT ' . $field . ' FROM whiteboard_files WHERE fileKey=?';
+    $query = 'SELECT ' . $field . ' FROM masterpassword_files WHERE fileKey=?';
     return getOneValueFromDataBase($mysql, $query, $fileKey);
 }
 

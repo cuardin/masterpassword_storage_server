@@ -37,7 +37,7 @@ class FileManagementTests extends WebTestCase {
     }
 
     function testCreateNewFileSimple() {
-        $this->get("http://rightboard.armyr.se/php_scripts/createNewFile.php?" .
+        $this->get(getBaseURL() . "createNewFile.php?" .
                 "username=$this->username&password=$this->password&" .
                 "fileName=$this->fileName&fileContents=$this->fileContents");        
         $this->assertText('OK');                
@@ -46,7 +46,7 @@ class FileManagementTests extends WebTestCase {
     }
     
     function testCreateNewFileBadUsername() {
-        $this->get("http://rightboard.armyr.se/php_scripts/createNewFile.php?" .
+        $this->get(getBaseURL() . "createNewFile.php?" .
                 "username=--&password=$this->password&" .
                 "fileName=$this->fileName&fileContents=$this->fileContents");        
         $this->assertText('FAIL');                
@@ -55,7 +55,7 @@ class FileManagementTests extends WebTestCase {
     }
     
     function testCreateNewFileBadPassword() {
-        $this->get("http://rightboard.armyr.se/php_scripts/createNewFile.php?" .
+        $this->get(getBaseURL() . "createNewFile.php?" .
                 "username=$this->username&password=--&" .
                 "fileName=$this->fileName&fileContents=$this->fileContents");        
         $this->assertText('FAIL');                
@@ -73,7 +73,7 @@ class FileManagementTests extends WebTestCase {
         $this->assertEqual( $this->fileContents, 
                 getOneValueFromFileList($this->mysql, "fileContents", $fileID));
        
-        $this->get("http://rightboard.armyr.se/php_scripts/deleteFile.php?" .
+        $this->get(getBaseURL() . "deleteFile.php?" .
                 "username=$this->username&password=$this->password&" .
                 "fileID=$fileID");        
         $this->assertText('OK');                
@@ -94,7 +94,7 @@ class FileManagementTests extends WebTestCase {
         $this->assertEqual( $this->fileContents, 
                 getOneValueFromFileList($this->mysql, "fileContents", $fileID));
        
-        $this->get("http://rightboard.armyr.se/php_scripts/deleteFile.php?" .
+        $this->get(getBaseURL() . "deleteFile.php?" .
                 "username=$this->username&password=--&" .
                 "fileID=$fileID");        
         $this->assertText('FAIL');                
@@ -111,7 +111,7 @@ class FileManagementTests extends WebTestCase {
         $this->assertEqual( $this->fileContents, 
                 getOneValueFromFileList($this->mysql, "fileContents", $fileID));
        
-        $this->get("http://rightboard.armyr.se/php_scripts/deleteFile.php?" .
+        $this->get(getBaseURL() . "deleteFile.php?" .
                 "username=$this->username&password=$this->password&" .
                 "fileID=$fileID");        
         $this->assertText('FAIL');                
@@ -125,7 +125,7 @@ class FileManagementTests extends WebTestCase {
                 $this->fileName, $this->fileContents);        
         $this->assertTrue( $fileID > 0 );                       
        
-        $this->get("http://rightboard.armyr.se/php_scripts/getFile.php?" .
+        $this->get(getBaseURL() . "getFile.php?" .
                 "username=$this->username&password=$this->password&" .
                 "fileID=$fileID");        
         $this->assertText($this->fileContents);                
@@ -138,7 +138,7 @@ class FileManagementTests extends WebTestCase {
                 $this->fileName, $this->fileContents);        
         $this->assertTrue( $fileID > 0 );                       
        
-        $this->get("http://rightboard.armyr.se/php_scripts/getFile.php?" .
+        $this->get(getBaseURL() . "getFile.php?" .
                 "username=$this->username&password=--&" .
                 "fileID=$fileID");        
         $this->assertText("FAIL");                
@@ -150,7 +150,7 @@ class FileManagementTests extends WebTestCase {
                 $this->fileName, $this->fileContents);        
         $this->assertTrue( $fileID > 0 );                       
        
-        $this->get("http://rightboard.armyr.se/php_scripts/getFile.php?" .
+        $this->get(getBaseURL() . "getFile.php?" .
                 "username=$this->username&password=$this->password&" .
                 "fileID=$fileID");        
         $this->assertText("FAIL");                
@@ -166,7 +166,7 @@ class FileManagementTests extends WebTestCase {
                 "testListFilesSimple02Name", "testListFilesSimple02Content");        
         
        
-        $this->get("http://rightboard.armyr.se/php_scripts/listFiles.php?" .
+        $this->get(getBaseURL() . "listFiles.php?" .
                 "username=$this->username&password=$this->password");        
         $this->assertMime("text/xml");                
         $this->assertText("testListFilesSimple01Name");
@@ -180,7 +180,7 @@ class FileManagementTests extends WebTestCase {
         $fileID01 = insertFile($this->mysql, $this->username, 
                 "testListFilesSimple01Name", "testListFilesSimple01Content");                        
        
-        $this->get("http://rightboard.armyr.se/php_scripts/listFiles.php?" .
+        $this->get(getBaseURL() . "listFiles.php?" .
                 "username=$this->username&password=--");        
         $this->assertText("FAIL");                
         $this->assertNoText("testListFilesSimple01Name");        
@@ -195,7 +195,7 @@ class FileManagementTests extends WebTestCase {
         
         $newContent = "testOverwriteFileSimpleContent";
         
-        $this->get("http://rightboard.armyr.se/php_scripts/overwriteFile.php?" .
+        $this->get(getBAseURL() . "overwriteFile.php?" .
                 "username=$this->username&password=$this->password&" .
                 "fileID=$fileID&fileContents=$newContent");        
         $this->assertText('OK');
