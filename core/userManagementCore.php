@@ -5,15 +5,16 @@
 function insertUser($mysql, $username, $verificationKey, $email) {    
 
     $password = "0";
-    $query = "INSERT INTO masterpassword_users (username, password, verificationKey, email)" .
-            "VALUES (?, ?, ?, ?)";
+    $seed = "1";
+    $query = "INSERT INTO masterpassword_users (username, password, verificationKey, seed, email)" .
+            "VALUES (?, ?, ?, ?, ?)";
 
     try {
         $stmt = $mysql->prepare($query);
         if (!$stmt) {
             throw new Exception('Error preparing sql statement');
         }
-        if (!$stmt->bind_param('ssss', $username, $password, $verificationKey, $email)) {
+        if (!$stmt->bind_param('sssis', $username, $password, $verificationKey, $seed, $email)) {
             throw new Exception('Error binding parameters');
         }
         if (!$stmt->execute()) {
@@ -123,6 +124,37 @@ function changePassword($mysql, $username, $password) {
     } catch (Exception $e) {
         throw new Exception(
         "Error resetting password: " . htmlspecialchars($mysql->error) );
+    }
+}
+
+function getSeed( $mysql, $username ) {
+    try {
+        $seed = getOneValueFromUserList($mysql, "seed", $username);        
+        return $seed;
+    } catch ( Exception $e ) {
+        return rand(2, 1000);
+    }
+}
+
+function setSeed( $mysql, $username, $seed ) {
+    try {
+        $query = "UPDATE masterpassword_users SET seed=? WHERE username=?";
+    
+        $stmt = $mysql->prepare($query);
+        if (!$stmt) {
+            throw new Exception('Error preparing sql statement');
+        }
+        if (!$stmt->bind_param('is', $seed, $username)) {
+            throw new Exception('Error binding parameters');
+        }
+        if (!$stmt->execute()) {
+            throw new Exception('Error executing statement');
+        }
+        if (!$stmt->close()) {
+            throw new Exception('Error closing statement');
+        }
+    } catch (Exception $e) {
+        //IF there was an error, say nothing.
     }
 }
 
