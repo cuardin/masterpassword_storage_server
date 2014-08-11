@@ -12,7 +12,7 @@ class AuthenticateUserTest extends WebTestCase {
     private $username = "testUser";
     private $password = "testPassword";
     private $verificationKey = "testKey";
-    private $email = "email@host.domain";
+    private $email = "test@armyr.se";
     private $privateKey = null;
     
     public function setUp() {

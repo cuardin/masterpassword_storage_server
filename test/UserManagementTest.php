@@ -12,7 +12,7 @@ class UserManagementTest extends WebTestCase {
     private $mysql = null;
     private $username = "testUser";
     private $password = "testPassword";    
-    private $email = "email@host.domain";
+    private $email = "test@armyr.se";
     private $verificationKey = "testKey";
     private $privateKey = null;
     

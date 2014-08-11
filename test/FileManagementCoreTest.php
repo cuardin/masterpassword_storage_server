@@ -9,7 +9,7 @@ class FileManagementCoreTest extends UnitTestCase {
     private $username = "testUser";
     private $password = "testPassword";
     private $verificationKey = "testKey";
-    private $email = "email@host.domain";
+    private $email = "test@armyr.se";
     private $privateKey = null;
     private $fileName = "testFile";
     private $fileContents = "testFileContentsFileManagementCore";
@@ -84,24 +84,17 @@ class FileManagementCoreTest extends UnitTestCase {
         //Create an additional file
         $fileID = insertFile($this->mysql, $this->username, 
                 $this->fileName, $this->fileContents);        
-        $this->assertTrue( $fileID > 0 );
-        $originalDate = getOneValueFromFileList($this->mysql, "creationDate", $fileID);
+        $this->assertTrue( $fileID > 0 );        
                 
         $newContent = "testOverwriteFileSimpleContent";
-        
-        //Pause 1.5 seconds to ensure clock has ticked.
-        sleep(1.5);
-        
+                
         //Now overwrite the file
         overwriteFile( $this->mysql, $fileID, $newContent);
         
         //Check that we actually made the file as well.
         $this->assertEqual( $newContent, 
-                getOneValueFromFileList($this->mysql, "fileContents", $fileID));       
-        
-        $newDate = getOneValueFromFileList($this->mysql, "creationDate", $fileID);
-        
-        $this->assertNotEqual ( $newDate, $originalDate );
+                getOneValueFromFileList($this->mysql, "fileContents", $fileID));                      
+                
     }
     
     public function testOverwriteFileWrongID() {        
