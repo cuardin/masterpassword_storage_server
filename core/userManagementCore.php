@@ -2,9 +2,9 @@
 
 //require_once( dirname(__FILE__)."/licenseManagementCore.php");
 
-function insertUser($mysql, $username, $password, $verificationKey, $email) {
-    $passwordCrypt = crypt($password);
+function insertUser($mysql, $username, $verificationKey, $email) {    
 
+    $password = "0";
     $query = "INSERT INTO masterpassword_users (username, password, verificationKey, email)" .
             "VALUES (?, ?, ?, ?)";
 
@@ -13,7 +13,7 @@ function insertUser($mysql, $username, $password, $verificationKey, $email) {
         if (!$stmt) {
             throw new Exception('Error preparing sql statement');
         }
-        if (!$stmt->bind_param('ssss', $username, $passwordCrypt, $verificationKey, $email)) {
+        if (!$stmt->bind_param('ssss', $username, $password, $verificationKey, $email)) {
             throw new Exception('Error binding parameters');
         }
         if (!$stmt->execute()) {
@@ -59,15 +59,15 @@ function deleteUser($mysql, $username) {
     }
 }
 
-function validateUser($mysql, $username) {
-    $query = "UPDATE masterpassword_users SET verificationKey='0' WHERE username=?";
+function validateUser($mysql, $username, $password) {
+    $query = "UPDATE masterpassword_users SET verificationKey='0', password=? WHERE username=?";
     //echo $query . "<br/>";
     try {
         $stmt = $mysql->prepare($query);
         if (!$stmt) {
             throw new Exception('Error preparing sql statement');
         }
-        if (!$stmt->bind_param('s', $username)) {
+        if (!$stmt->bind_param('ss', crypt($password), $username)) {
             throw new Exception('Error binding parameters');
         }
         if (!$stmt->execute()) {
@@ -90,12 +90,12 @@ function deleteUserWithKey($mysql, $username, $password, $privateKey) {
     }
 }
 
-function validateUserWithKey($mysql, $username, $verificationKey) {
+function validateUserWithKey($mysql, $username, $password, $verificationKey) {
     $verificationKeyStored = getOneValueFromUserList($mysql, 'verificationKey', $username);
     if (strcmp($verificationKeyStored, $verificationKey)) {
         throw new Exception("Key provided did not match stored key");
     }
-    validateUser($mysql, $username);
+    validateUser($mysql, $username, $password);
 }
 
 function changePassword($mysql, $username, $password) {

@@ -1,6 +1,7 @@
 <?php
 
 require_once ( './core/utilities.php' );
+require_once ( './core/userManagementCore.php' );
 
 
 
@@ -8,6 +9,7 @@ try {
     $mysql = connectDatabase();
     
     $username = getParameter($mysql, "username");
+    $password = getParameter($mysql, "password");
     $verificationOK = false;
     
     //First try verification key
@@ -18,37 +20,30 @@ try {
         //Now check the fetched verification key against the stored
         if (!strcmp($verificationKeyStored, $verificationKey)) {
             $verificationOK = true;
+            validateUser($mysql,$username,$password);
         }
     } catch ( Exception $e ) {
         //Do nothing.        
     }
     
-    //Now try the private key
-    try {
-        $privateKey = getparameter( $mysql, "privateKey" );
-        //Now check the fetched private key against the stored
-        if (!strcmp($privateKey, getPrivateKey())) {
-            $verificationOK = true;
+    if ( !$verificationOK ) {
+        //Now try the private key
+        try {
+            $privateKey = getparameter( $mysql, "privateKey" );
+            //Now check the fetched private key against the stored
+            if (!strcmp($privateKey, getPrivateKey())) {
+                $verificationOK = true;
+                validateUser($mysql, $username, $password);
+            }
+        } catch ( Exception $e ) {
+            //Do nothing.
         }
-    } catch ( Exception $e ) {
-        //Do nothing.
     }
     
     if ( !$verificationOK ) {
-        throw new Exception( "Verification key did not match stored, personal or secret." );
+        throw new Exception( "Verification key did not match stored key." );
     }
-    
-    $stmt = $mysql->prepare("UPDATE masterpassword_users SET verificationKey='0' WHERE username=?");
-    if ( !$stmt ) {
-        throw new Exception( "Error preparing SLQ statement" );
-    }
-    if ( !$stmt->bind_param('s', $username) ) {
-        throw new Exception ( "Error binding parameter" );
-    }
-    if ( !$stmt->execute() ) {
-        throw new Exception ( "Error executing SQL statement" );
-    }
-    
+        
     echo "<h1>OK</h1>";
 } catch ( Exception $e ) {    
     echo ( "<h1>FAIL</h1>" );

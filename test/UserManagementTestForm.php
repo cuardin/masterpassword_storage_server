@@ -33,9 +33,7 @@ class UserManagementTestForm extends WebTestCase {
     function testCreateUserSimple() {        
         $this->get(getBaseURL() . "forms/createUserForm.php");        
         $this->assertResponse( array(200) );
-        $this->assertTrue( $this->setField("username", $this->username));
-        $this->assertTrue( $this->setField("password1", $this->password));
-        $this->assertTrue( $this->setField("password2", $this->password));
+        $this->assertTrue( $this->setField("username", $this->username));        
         $this->assertTrue( $this->setField("email", $this->email));
         $this->assertTrue( $this->setField("privateKey", $this->privateKey));
         $this->clickSubmit();
@@ -43,10 +41,10 @@ class UserManagementTestForm extends WebTestCase {
     }
      
     function testChangePasswordSimple() {        
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                $this->verificationKey, $this->email);        
         
-        validateUser( $this->mysql, $this->username );
+        validateUser( $this->mysql, $this->username, $this->password );
         
         $this->get(getBaseURL() . "forms/changePasswordForm.php");        
         $this->assertResponse( array(200) );
@@ -59,10 +57,10 @@ class UserManagementTestForm extends WebTestCase {
     }
     
      function testResetPasswordSimple() {        
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                $this->verificationKey, $this->email);        
         
-        validateUser( $this->mysql, $this->username );
+        validateUser( $this->mysql, $this->username, $this->password );
         
         $this->get(getBaseURL() . "forms/resetPasswordForm.php");        
         $this->assertResponse( array(200) );

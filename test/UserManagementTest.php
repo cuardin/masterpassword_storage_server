@@ -48,33 +48,34 @@ class UserManagementTest extends WebTestCase {
     
     function testCreateUserMissingParameter() {        
         $this->get(getBaseURL() . "createUser.php?" .
-                "username=$this->username&password1=$this->password&" .                
-                "email=$this->email&privateKey=$this->privateKey");        
+                "username=$this->username");        
         $this->assertText('FAIL');                 
     }
     
     function testVerifyUserSimple() {        
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                 $this->verificationKey, $this->email);
         
         $this->get(getBaseURL() . "verifyEmail.php?" .
                 "username=$this->username&" .
+                "password=$this->password&" .
                 "verificationKey=$this->verificationKey");        
         $this->assertText('OK');                 
     }
     
     function testVerifyUserPrivateKey() {        
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                 $this->verificationKey, $this->email);
         
         $this->get(getBaseURL() . "verifyEmail.php?" .
                 "username=$this->username&" .
+                "password=$this->password&" .
                 "privateKey=$this->privateKey");        
         $this->assertText('OK');                 
     }
     
     function testVerifyUserBadKey() {        
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                 $this->verificationKey, $this->email);
         
         $this->get(getBaseURL() . "verifyEmail.php?" .
@@ -86,10 +87,10 @@ class UserManagementTest extends WebTestCase {
     
     function testChangePassword() {
         //Create a user to edit.
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                $this->verificationKey, $this->email);        
         
-        validateUser( $this->mysql, $this->username );        
+        validateUser( $this->mysql, $this->username, $this->password );        
         
         $this->get(getBaseURL() . "changePassword.php?" .
                 "username=$this->username&password=$this->password&" .
@@ -105,10 +106,10 @@ class UserManagementTest extends WebTestCase {
     
     function testChangePasswordBadUsername() {
         //Create a user to edit.
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                $this->verificationKey, $this->email);        
         
-        validateUser( $this->mysql, $this->username );
+        validateUser( $this->mysql, $this->username, $this->password );
         
         $this->get(getBaseURL() . "changePassword.php?" .
                 "username=--&password=$this->password&" .
@@ -123,10 +124,10 @@ class UserManagementTest extends WebTestCase {
     }
     function testChangePasswordBadPassword() {
         //Create a user to edit.
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                $this->verificationKey, $this->email);        
         
-        validateUser( $this->mysql, $this->username );
+        validateUser( $this->mysql, $this->username, $this->password );
         
         $this->get(getBaseURL() . "changePassword.php?" .
                 "username=$this->username&password=--&" .
@@ -142,10 +143,10 @@ class UserManagementTest extends WebTestCase {
     
     function testChangePasswordUnequalPassword() {
         //Create a user to edit.
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                $this->verificationKey, $this->email);        
         
-        validateUser( $this->mysql, $this->username );
+        validateUser( $this->mysql, $this->username, $this->password );
         
         $this->get(getBaseURL() . "changePassword.php?" .
                 "username=$this->username&password=$this->password&" .
@@ -161,10 +162,10 @@ class UserManagementTest extends WebTestCase {
     
     function testResetPasswordSimple() {
         //Create a user to edit.
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                $this->verificationKey, $this->email);        
         
-        validateUser( $this->mysql, $this->username );
+        validateUser( $this->mysql, $this->username, $this->password );
         
         $this->get(getBaseURL() . "resetPassword.php?" .
                 "username=$this->username&privateKey=" . getPrivateKey() );        
@@ -179,19 +180,14 @@ class UserManagementTest extends WebTestCase {
     
     function testCreateAndAuthenticateUser() {
         $this->get(getBaseURL() . "createUser.php?" .
-                "username=$this->username&password1=$this->password&".
-                "password2=$this->password&email=email@host.com&".
+                "username=$this->username&email=test@armyr.se&".
                 "privateKey=" . getPrivateKey() );        
         $this->assertText('successfully');
         
         $this->assertEqual($this->username, getOneValueFromUserList($this->mysql, "username", $this->username));
         
-        $storedPassCrypt = getOneValueFromUserList($this->mysql, "password", $this->username);
-        $myPassCrypt = crypt($this->password, $storedPassCrypt);
-        $this->assertEqual($myPassCrypt, $storedPassCrypt);
-        
         $this->get(getBaseURL() . "verifyEmail.php?" .
-                "username=$this->username&".
+                "username=$this->username&password=$this->password&".
                 "privateKey=" . getPrivateKey() );        
         $this->assertText('OK');
                         

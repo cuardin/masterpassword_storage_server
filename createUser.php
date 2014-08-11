@@ -13,19 +13,13 @@ try {
 
     //Escape all the user input to be SQL safe.
     $username = getParameter($mysql, "username");
-    $password = getParameter($mysql, "password1");
-    $password2 = getParameter($mysql, "password2");
     $email = getParameter($mysql, "email");
 
     $userNameStored = getOneValueFromUserList($mysql, 'username', $username);
     if (!($userNameStored == null)) {
         throw new Exception('User name allready exists: ' . $userNameStored);
     }
-    
-    if ( strcmp( $password, $password2 ) ) {
-        throw new Exception ( "Passwords do not match." );
-    } 
-    
+        
     //Check if we have a recaptcha or a private key
     $isHuman = false;
     try {
@@ -58,13 +52,13 @@ try {
         throw new Exception ( "Proof of humanity failed" );
     }
     
-    insertUser($mysql, $username, $password, $verificationKey, $email);
+    insertUser($mysql, $username, $verificationKey, $email);
     
     //Now send an email
     $to = $email;
     $subject = "Verification email";
     $message = "Hello! Press this link to verify this email address: " .
-            "http://rightboard.armyr.se/php_scripts/verifyEmail.php?username=" .
+            "http://masterpassword.armyr.se/php_scripts/verifyEmail.php?username=" .
             $username . "&verificationKey=" . $verificationKey;
     $from = "create_new_user_rightboard@armyr.se";
     $headers = "From:" . $from;

@@ -12,9 +12,7 @@ and open the template in the editor.
     <body>      
         <form action="http://www.armyr.se/masterpassword/php_scripts/createUser.php" method="POST">
             <table>
-            <tr><td>Username:</td><td><input type="text" name="username"></td></tr>
-            <tr><td>Password:</td><td><input type="password" name="password1"></td></tr>
-            <tr><td>Password again:</td><td><input type="password" name="password2"></td></tr>            
+            <tr><td>Username*:</td><td><input type="text" name="username"></td></tr>
             <tr><td>Email*:</td><td><input type="text" name="email"></td></tr>
             <tr><td colspan="2">
                 <?php
@@ -27,6 +25,7 @@ and open the template in the editor.
             <input type="submit"></td></tr>
             </table>
         </form>
-        <p>* We will not purposefully give your email address to any one for any reason.</p>        
+        <p>* We will not purposefully give your username or email address to any one for any reason. 
+            However, these will be stored in plain-text in our database.</p>        
     </body>
 </html>

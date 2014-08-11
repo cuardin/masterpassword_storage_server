@@ -23,11 +23,11 @@ class AuthenticateUserTest extends WebTestCase {
         deleteUser( $this->mysql, $this->username );
         
         //Create a user
-        insertUser($this->mysql, $this->username, $this->password, 
+        insertUser($this->mysql, $this->username, 
                $this->verificationKey, $this->email);
         
         //And validate user emial, otherwise we canot authenticate.        
-        validateUser( $this->mysql, $this->username );
+        validateUser( $this->mysql, $this->username, $this->password );
 
     }
     
