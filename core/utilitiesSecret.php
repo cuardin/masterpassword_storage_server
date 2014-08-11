@@ -17,4 +17,8 @@ function getCAPTHCAKey() {
     return "6LdI69gSAAAAAMGDL9POtz8ackomTjVz3jnwXRKC";
 }
 
+function getBaseURL() {
+    return "http://masterpassword.armyr.se/php_scripts/";
+}
+
 ?>

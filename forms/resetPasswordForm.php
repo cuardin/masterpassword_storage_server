@@ -10,7 +10,7 @@ and open the template in the editor.
     </head>
 
     <body>        
-        <form action="http://www.armyr.se/rightboard/php_scripts/resetPassword.php" method="POST">
+        <form action="http://www.armyr.se/masterpassword/php_scripts/resetPassword.php" method="POST">
             <p>Username: <input type="text" name="username"></p>                        
             <?php
             require_once('../core/recaptchalib.php');

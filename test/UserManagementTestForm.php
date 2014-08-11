@@ -2,6 +2,9 @@
 
 require_once('./simpletest/autorun.php');  
 require_once('./simpletest/web_tester.php');
+require_once('../core/utilitiesSecret.php' );
+require_once('../core/userManagementCore.php' );
+
 SimpleTest::prefer(new TextReporter());
 
 class UserManagementTestForm extends WebTestCase {
@@ -28,7 +31,7 @@ class UserManagementTestForm extends WebTestCase {
     }
 
     function testCreateUserSimple() {        
-        $this->get("http://rightboard.armyr.se/php_scripts/forms/createUserForm.php");        
+        $this->get(getBaseURL() . "forms/createUserForm.php");        
         $this->assertResponse( array(200) );
         $this->assertTrue( $this->setField("username", $this->username));
         $this->assertTrue( $this->setField("password1", $this->password));
@@ -45,7 +48,7 @@ class UserManagementTestForm extends WebTestCase {
         
         validateUser( $this->mysql, $this->username );
         
-        $this->get("http://rightboard.armyr.se/php_scripts/forms/changePasswordForm.php");        
+        $this->get(getBaseURL() . "forms/changePasswordForm.php");        
         $this->assertResponse( array(200) );
         $this->assertTrue( $this->setField("username", $this->username));
         $this->assertTrue( $this->setField("password", $this->password));
@@ -61,7 +64,7 @@ class UserManagementTestForm extends WebTestCase {
         
         validateUser( $this->mysql, $this->username );
         
-        $this->get("http://rightboard.armyr.se/php_scripts/forms/resetPasswordForm.php");        
+        $this->get(getBaseURL() . "forms/resetPasswordForm.php");        
         $this->assertResponse( array(200) );
         $this->assertTrue( $this->setField("username", $this->username));
         $this->assertTrue( $this->setField("privateKey", $this->privateKey));

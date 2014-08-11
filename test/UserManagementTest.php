@@ -2,10 +2,13 @@
 
 require_once('./simpletest/autorun.php');  
 require_once('./simpletest/web_tester.php');
+require_once('../core/utilitiesSecret.php' );
+require_once('../core/userManagementCore.php' );
+
 SimpleTest::prefer(new TextReporter());
 
 class UserManagementTest extends WebTestCase {
-    
+        
     private $mysql = null;
     private $username = "testUser";
     private $password = "testPassword";    
@@ -28,7 +31,7 @@ class UserManagementTest extends WebTestCase {
     }
 
     function testCreateUserSimple() {        
-        $this->get("http://rightboard.armyr.se/php_scripts/createUser.php?" .
+        $this->get( getBaseURL() . "/createUser.php?" .
                 "username=$this->username&password1=$this->password&" .
                 "password2=$this->password&" .
                 "email=$this->email&privateKey=$this->privateKey");        
@@ -36,7 +39,7 @@ class UserManagementTest extends WebTestCase {
     }
     
     function testCreateUserBadKey() {        
-        $this->get("http://rightboard.armyr.se/php_scripts/createUser.php?" .
+        $this->get(getBaseURL() . "createUser.php?" .
                 "username=$this->username&password1=$this->password&" .
                 "password2=$this->password&" .
                 "email=$this->email&privateKey=--");        
@@ -44,7 +47,7 @@ class UserManagementTest extends WebTestCase {
     }
     
     function testCreateUserMissingParameter() {        
-        $this->get("http://rightboard.armyr.se/php_scripts/createUser.php?" .
+        $this->get(getBaseURL() . "createUser.php?" .
                 "username=$this->username&password1=$this->password&" .                
                 "email=$this->email&privateKey=$this->privateKey");        
         $this->assertText('FAIL');                 
@@ -54,7 +57,7 @@ class UserManagementTest extends WebTestCase {
         insertUser($this->mysql, $this->username, $this->password, 
                 $this->verificationKey, $this->email);
         
-        $this->get("http://rightboard.armyr.se/php_scripts/verifyEmail.php?" .
+        $this->get(getBaseURL() . "verifyEmail.php?" .
                 "username=$this->username&" .
                 "verificationKey=$this->verificationKey");        
         $this->assertText('OK');                 
@@ -64,7 +67,7 @@ class UserManagementTest extends WebTestCase {
         insertUser($this->mysql, $this->username, $this->password, 
                 $this->verificationKey, $this->email);
         
-        $this->get("http://rightboard.armyr.se/php_scripts/verifyEmail.php?" .
+        $this->get(getBaseURL() . "verifyEmail.php?" .
                 "username=$this->username&" .
                 "privateKey=$this->privateKey");        
         $this->assertText('OK');                 
@@ -74,7 +77,7 @@ class UserManagementTest extends WebTestCase {
         insertUser($this->mysql, $this->username, $this->password, 
                 $this->verificationKey, $this->email);
         
-        $this->get("http://rightboard.armyr.se/php_scripts/verifyEmail.php?" .
+        $this->get(getBaseURL() . "verifyEmail.php?" .
                 "username=$this->username&" .
                 "verificationKey=--");        
         $this->assertText('FAIL');                 
@@ -88,7 +91,7 @@ class UserManagementTest extends WebTestCase {
         
         validateUser( $this->mysql, $this->username );        
         
-        $this->get("http://rightboard.armyr.se/php_scripts/changePassword.php?" .
+        $this->get(getBaseURL() . "changePassword.php?" .
                 "username=$this->username&password=$this->password&" .
                 "newPassword1=newPassword&newPassword2=newPassword");        
         $this->assertText('Password changed successfully');
@@ -107,7 +110,7 @@ class UserManagementTest extends WebTestCase {
         
         validateUser( $this->mysql, $this->username );
         
-        $this->get("http://rightboard.armyr.se/php_scripts/changePassword.php?" .
+        $this->get(getBaseURL() . "changePassword.php?" .
                 "username=--&password=$this->password&" .
                 "newPassword1=newPassword&newPassword2=newPassword");        
         $this->assertText('FAIL');
@@ -125,7 +128,7 @@ class UserManagementTest extends WebTestCase {
         
         validateUser( $this->mysql, $this->username );
         
-        $this->get("http://rightboard.armyr.se/php_scripts/changePassword.php?" .
+        $this->get(getBaseURL() . "changePassword.php?" .
                 "username=$this->username&password=--&" .
                 "newPassword1=newPassword&newPassword2=newPassword");        
         $this->assertText('FAIL');
@@ -144,7 +147,7 @@ class UserManagementTest extends WebTestCase {
         
         validateUser( $this->mysql, $this->username );
         
-        $this->get("http://rightboard.armyr.se/php_scripts/changePassword.php?" .
+        $this->get(getBaseURL() . "changePassword.php?" .
                 "username=$this->username&password=$this->password&" .
                 "newPassword1=newPassword&newPassword2=newPass");        
         $this->assertText('FAIL');
@@ -163,7 +166,7 @@ class UserManagementTest extends WebTestCase {
         
         validateUser( $this->mysql, $this->username );
         
-        $this->get("http://rightboard.armyr.se/php_scripts/resetPassword.php?" .
+        $this->get(getBaseURL() . "resetPassword.php?" .
                 "username=$this->username&privateKey=" . getPrivateKey() );        
         $this->assertText('OK');
         
@@ -175,7 +178,7 @@ class UserManagementTest extends WebTestCase {
     }
     
     function testCreateAndAuthenticateUser() {
-        $this->get("http://rightboard.armyr.se/php_scripts/createUser.php?" .
+        $this->get(getBaseURL() . "createUser.php?" .
                 "username=$this->username&password1=$this->password&".
                 "password2=$this->password&email=email@host.com&".
                 "privateKey=" . getPrivateKey() );        
@@ -187,12 +190,12 @@ class UserManagementTest extends WebTestCase {
         $myPassCrypt = crypt($this->password, $storedPassCrypt);
         $this->assertEqual($myPassCrypt, $storedPassCrypt);
         
-        $this->get("http://rightboard.armyr.se/php_scripts/verifyEmail.php?" .
+        $this->get(getBaseURL() . "verifyEmail.php?" .
                 "username=$this->username&".
                 "privateKey=" . getPrivateKey() );        
         $this->assertText('OK');
                         
-        $this->get("http://rightboard.armyr.se/php_scripts/authenticateUser.php?" .
+        $this->get(getBaseURL() . "authenticateUser.php?" .
                 "username=$this->username&password=$this->password" );                
         $this->assertText('OK');
     }

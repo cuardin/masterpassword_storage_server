@@ -1,6 +1,8 @@
 <?php
 
 require_once('./simpletest/autorun.php');  
+require_once('../core/utilitiesSecret.php' );
+require_once('../core/userManagementCore.php' );
 
 class authenticateUserCoreTest extends UnitTestCase {
     
