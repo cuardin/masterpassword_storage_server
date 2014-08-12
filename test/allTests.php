@@ -13,6 +13,7 @@ class AllTests extends TestSuite {
         $this->addFile('AuthenticateUserTest.php');
         $this->addFile('FileManagementTests.php');
         $this->addFile('FileManagementCoreTest.php');
+        $this->addFile('GetSeedTest.php');
     }
 }
 ?>

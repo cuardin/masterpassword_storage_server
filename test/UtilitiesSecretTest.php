@@ -7,7 +7,7 @@ class UtilitiesSecretTest extends UnitTestCase {
     public function testDatabaseConnect() {
         $mysql = connectDatabase();
         $this->assertNotNull( $mysql );        
-    }
+    }    
 }
 
 ?>

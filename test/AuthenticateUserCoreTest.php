@@ -64,34 +64,6 @@ class authenticateUserCoreTest extends UnitTestCase {
         }        
     }   
     
-    public function testGetSeedInvalidatedUser() {
-        //This should work just fine.
-        $seed = getSeed( $this->mysql, $this->username );
-        $this->assertEqual("1", $seed);
-    }
-    
-    public function testGetSeedValidUser() {        
-        validateUser($this->mysql, $this->username, $this->password );
-        
-        $seed = getSeed( $this->mysql, $this->username );
-        
-        $this->assertEqual("1", $seed);
-    }   
-    
-    public function testGetSeedNonexistentUser() {        
-        //This should work just fine.
-        $seed = getSeed( $this->mysql, "anotherName" );
-        $this->assertNotEqual("1", $seed);
-    }
-    
-    public function testUpdateSeed() {        
-        validateUser($this->mysql, $this->username, $this->password );
-        
-        setSeed( $this->mysql, $this->username, "2" );
-        $seed = getSeed( $this->mysql, $this->username );
-                
-        $this->assertEqual("2", $seed);
-    }   
 
 }
 

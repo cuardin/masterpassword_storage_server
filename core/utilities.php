@@ -40,19 +40,8 @@ function authenticateUser($mysql, $username, $password) {
     if (strcmp($passwordStored, $passwordCrypt)) {
         throw new Exception( "Wrong password" );
      }
-     /*
-    //Finally, check that we have not expired
-    $expirationDateString =
-            getOneValueFromUserList($mysql, "expirationDate", $username);
-    $expirationDate = strtotime($expirationDateString);
-    $currentDate = strtotime(getDateString());
 
-    if ($expirationDate < $currentDate) {
-        //echo ( 'FAIL: Account expired on ' . $expirationDateString . '.' );
-        throw new Exception( "License expired" );
-    }
-    */
-    return true;
+     return true;
 }
 
 function getUserNameFromEmail($mysql, $email) {

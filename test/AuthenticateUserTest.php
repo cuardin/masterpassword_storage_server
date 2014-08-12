@@ -52,6 +52,7 @@ class AuthenticateUserTest extends WebTestCase {
                 "username=$this->username&password=--" );        
         $this->assertText('FAIL');                 
     }        
+    
 }
 
 
