@@ -8,6 +8,9 @@ class UtilitiesSecretTest extends UnitTestCase {
         $mysql = connectDatabase();
         $this->assertNotNull( $mysql );        
     }    
-}
 
-?>
+    public function testGetGlobalSeed() {
+        $seed = getGlobalSeed();
+        $this->assertEqual("1", $seed);
+    }
+}

@@ -21,4 +21,6 @@ function getBaseURL() {
     return "http://masterpassword.armyr.se/php_scripts/";
 }
 
-?>
+function getGlobalSeed() {
+    return "1";
+}
