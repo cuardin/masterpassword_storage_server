@@ -6,10 +6,10 @@ require_once('../core/utilities.php' );
 require_once('../core/seedManagementCore.php' );
 SimpleTest::prefer(new TextReporter());
 
-class getSeedTest extends UnitTestCase {
+class getSeedTest extends WebTestCase {
     
     private $mysql = null;
-    private $username = "testUser";
+    private $username = "testName"; //For some reason testUser does not work with getSeed.php.....
     private $password = "testPassword";
     private $verificationKey = "testKey";
     private $email = "test@armyr.se";
@@ -70,38 +70,19 @@ class getSeedTest extends UnitTestCase {
     //************************************************
 
     function testAuthenticateGetSeedSuccess() {
-        //TODO
-        /*
         validateUser($this->mysql, $this->username, $this->password );
-        
-        $this->get(getBaseURL() . "getSeed.php?" .
-                "username=$this->username&password=--" );        
-        $this->assertText('FAIL');                 
-         * 
-         */
-        $this->fail("Not implemented");
+        $url = getBaseURL() . "getSeed.php?" .
+                "username=$this->username";
+        //echo $url;
+        $this->get( $url );        
+        $this->assertText('1:1');                 
+                 
     }        
 
     function testAuthenticateGetSeedBadUser() {
-        //TODO
-        /*
-        $this->get(getBaseURL() . "authenticateUser.php?" .
-                "username=$this->username&password=--" );        
-        $this->assertText('FAIL');  
-         * 
-         */     
-        $this->fail("Not implemented");
+        $this->get(getBaseURL() . "getSeed.php?" .
+                "username=anotherName" );        
+        $this->assertText(':1');  
+        $this->assertNoText('1:1');
     }
-    
-    function testAuthenticateGetSeedBadSeed() {
-        //TODO
-        /*
-        $this->get(getBaseURL() . "authenticateUser.php?" .
-                "username=$this->username&password=--" );        
-        $this->assertText('FAIL');  
-         * 
-         */
-        $this->fail("Not implemented");
-    }
-
 }

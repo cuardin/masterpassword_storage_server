@@ -124,6 +124,3 @@ function verifyOwnerOfFile($mysql, $username, $fileID) {
 
     return true;
 }
-
-
-?>
