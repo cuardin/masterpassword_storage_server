@@ -1,5 +1,5 @@
 <?php
-require_once('./simpletest/autorun.php');  
+require_once('../simpletest/autorun.php');  
 require_once('../core/userManagementCore.php');
 require_once('../core/utilities.php');
 

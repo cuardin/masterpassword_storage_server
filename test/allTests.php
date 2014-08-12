@@ -1,5 +1,5 @@
 <?php
-require_once('simpletest/autorun.php');
+require_once('../simpletest/autorun.php');
 
 class AllTests extends TestSuite {
     function AllTests() {
