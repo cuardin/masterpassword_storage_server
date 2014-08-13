@@ -39,24 +39,8 @@ class UserManagementTestForm extends WebTestCase {
         $this->clickSubmit();
         $this->assertText( "successfully" );
     }
-     
-    function testChangePasswordSimple() {        
-        insertUser($this->mysql, $this->username, 
-               $this->verificationKey, $this->email);        
-        
-        validateUser( $this->mysql, $this->username, $this->password );
-        
-        $this->get(getBaseURL() . "forms/changePasswordForm.php");        
-        $this->assertResponse( array(200) );
-        $this->assertTrue( $this->setField("username", $this->username));
-        $this->assertTrue( $this->setField("password", $this->password));
-        $this->assertTrue( $this->setField("newPassword1", "newPass1"));
-        $this->assertTrue( $this->setField("newPassword2", "newPass1"));        
-        $this->clickSubmit();
-        $this->assertText( "successfully" );
-    }
-    
-     function testResetPasswordSimple() {        
+         
+    function testResetPasswordSimple() {        
         insertUser($this->mysql, $this->username, 
                $this->verificationKey, $this->email);        
         

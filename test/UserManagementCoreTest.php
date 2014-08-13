@@ -109,19 +109,18 @@ class UserManagementCoreTest extends UnitTestCase {
         validateUserWithKey( $this->mysql, $this->username, $this->password, "" );
     } 
     
-    public function testChangePassword() {
+    public function testResetPassword() {
         //Create a user to validate
         insertUser($this->mysql, $this->username,
                $this->verificationKey, $this->email);        
         
         validateUser( $this->mysql, $this->username, $this->password, $this->password );
         
-        changePassword( $this->mysql, $this->username, "newPassword" );
+        resetPassword( $this->mysql, $this->username, "newKey" );
         
-                //Make sure password was actually changed.
-        $passInDB = getOneValueFromUserList($this->mysql, "password", $this->username);
-        $newPasswordCrypt = crypt( "newPassword", $passInDB );
-        $this->assertEqual($passInDB, $newPasswordCrypt );
+        //Make sure key was actually changed.
+        $keyInDB = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
+        $this->assertEqual($keyInDB, "newKey");
 
     }
 }

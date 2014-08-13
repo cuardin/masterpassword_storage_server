@@ -85,96 +85,22 @@ class UserManagementTest extends WebTestCase {
     }
     
     
-    function testChangePassword() {
-        //Create a user to edit.
-        insertUser($this->mysql, $this->username, 
-               $this->verificationKey, $this->email);        
-        
-        validateUser( $this->mysql, $this->username, $this->password );        
-        
-        $this->get(getBaseURL() . "changePassword.php?" .
-                "username=$this->username&password=$this->password&" .
-                "newPassword1=newPassword&newPassword2=newPassword");        
-        $this->assertText('Password changed successfully');
-        
-        //Make sure password was actually changed.
-        $passInDB = getOneValueFromUserList($this->mysql, "password", $this->username);
-        $newPasswordCrypt = crypt( "newPassword", $passInDB );
-        $this->assertEqual($passInDB, $newPasswordCrypt );
-
-    }
-    
-    function testChangePasswordBadUsername() {
-        //Create a user to edit.
-        insertUser($this->mysql, $this->username, 
-               $this->verificationKey, $this->email);        
-        
-        validateUser( $this->mysql, $this->username, $this->password );
-        
-        $this->get(getBaseURL() . "changePassword.php?" .
-                "username=--&password=$this->password&" .
-                "newPassword1=newPassword&newPassword2=newPassword");        
-        $this->assertText('FAIL');
-        
-        //Make sure password was not changed.
-        $passInDB = getOneValueFromUserList($this->mysql, "password", $this->username);
-        $newPasswordCrypt = crypt( $this->password, $passInDB );
-        $this->assertEqual($passInDB, $newPasswordCrypt );
-
-    }
-    function testChangePasswordBadPassword() {
-        //Create a user to edit.
-        insertUser($this->mysql, $this->username, 
-               $this->verificationKey, $this->email);        
-        
-        validateUser( $this->mysql, $this->username, $this->password );
-        
-        $this->get(getBaseURL() . "changePassword.php?" .
-                "username=$this->username&password=--&" .
-                "newPassword1=newPassword&newPassword2=newPassword");        
-        $this->assertText('FAIL');
-        
-        //Make sure password was not changed.
-        $passInDB = getOneValueFromUserList($this->mysql, "password", $this->username);
-        $newPasswordCrypt = crypt( $this->password, $passInDB );
-        $this->assertEqual($passInDB, $newPasswordCrypt );
-
-    }
-    
-    function testChangePasswordUnequalPassword() {
-        //Create a user to edit.
-        insertUser($this->mysql, $this->username, 
-               $this->verificationKey, $this->email);        
-        
-        validateUser( $this->mysql, $this->username, $this->password );
-        
-        $this->get(getBaseURL() . "changePassword.php?" .
-                "username=$this->username&password=$this->password&" .
-                "newPassword1=newPassword&newPassword2=newPass");        
-        $this->assertText('FAIL');
-        
-        //Make sure password was not changed.
-        $passInDB = getOneValueFromUserList($this->mysql, "password", $this->username);
-        $newPasswordCrypt = crypt( $this->password, $passInDB );
-        $this->assertEqual($passInDB, $newPasswordCrypt );
-
-    }
-    
     function testResetPasswordSimple() {
         //Create a user to edit.
         insertUser($this->mysql, $this->username, 
                $this->verificationKey, $this->email);        
         
         validateUser( $this->mysql, $this->username, $this->password );
+        $keyInDB = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
+        $this->assertEqual("0", $keyInDB);
         
         $this->get(getBaseURL() . "resetPassword.php?" .
                 "username=$this->username&privateKey=" . getPrivateKey() );        
         $this->assertText('OK');
         
         //Make sure password was changed.
-        $passInDB = getOneValueFromUserList($this->mysql, "password", $this->username);
-        $newPasswordCrypt = crypt( $this->password, $passInDB );
-        $this->assertTrue(strcmp($passInDB, $newPasswordCrypt) );
+        $keyInDB = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
+        $this->assertNotEqual("0", $keyInDB);
 
     }
     

@@ -97,11 +97,10 @@ function validateUserWithKey($mysql, $username, $password, $verificationKey) {
     validateUser($mysql, $username, $password);
 }
 
-function changePassword($mysql, $username, $password) {
-    $password = crypt($password);
+function resetPassword($mysql, $username, $verificationKey) {    
     
     try {
-        $query = "UPDATE masterpassword_users SET password=? WHERE username=?";
+        $query = "UPDATE masterpassword_users SET verificationKey=? WHERE username=?";
 
         $stmt = $mysql->prepare($query);
 
@@ -109,7 +108,7 @@ function changePassword($mysql, $username, $password) {
             throw new Exception();
         }
 
-        if (!$stmt->bind_param('ss', $password, $username)) {
+        if (!$stmt->bind_param('ss', $verificationKey, $username)) {
             throw new Exception();
         }
 

@@ -8,7 +8,7 @@ require_once ( './core/recaptchalib.php' );
 try {
     $mysql = connectDatabase();
 
-    $randomPassword = rand_string(8);
+    $verificationKey = rand_string(32);
 
     //Escape all the user input to be SQL safe.
     $username = getParameter($mysql, "username");
@@ -31,18 +31,19 @@ try {
         }
     }
 
-    changePassword($mysql, $username, $randomPassword);
+    resetPassword($mysql, $username, $verificationKey );
+    
 
 
 //Now send an email
     $to = getOneValueFromUserList($mysql, "email", $username);
     $subject = "New password email";
-    $message = "Hello! New password is: " . $randomPassword;
-    $from = "reset_password_rightboard@armyr.se";
+    $message = "Hello! you have requested a password reset. Your verification key is: " . $randomPassword;
+    $from = "reset_password_masterpassword@armyr.se";
     $headers = "From:" . $from;
     mail($to, $subject, $message, $headers);
 
-    echo "<h1>OK</h1> Password reset successfully.";
+    echo "<h1>OK</h1> Password reset request sent successfully.";
 } catch (Exception $e) {
     echo "FAIL: " . $e->getMessage();
 }
