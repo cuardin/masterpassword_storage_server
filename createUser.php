@@ -36,7 +36,7 @@ try {
         $challenge = getParameter($mysql, "recaptcha_challenge_field");
         $response = getParameter($mysql, "recaptcha_response_field");
 
-        $privateCAPTHCAkey = "6LdI69gSAAAAAMGDL9POtz8ackomTjVz3jnwXRKC";
+        $privateCAPTHCAkey = getCAPTHCAKey();
         $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
 
         if (!$resp->is_valid) {
