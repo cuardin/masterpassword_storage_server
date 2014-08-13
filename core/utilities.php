@@ -2,6 +2,10 @@
 
 require_once( dirname(__FILE__).'/utilitiesSecret.php' );
 
+function getGlobalSeed() {
+    return "1";
+}
+
 function rand_string($length) {
     $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -11,6 +15,35 @@ function rand_string($length) {
     }
 
     return $str;
+}
+
+function connectDatabase() {
+    $username = getSQLUsername();
+    $password = getSQLPassword();
+    $databaseName = getSQLDBName();
+    
+    $mysql = new mysqli("localhost", $username, $password, $databaseName);
+    if ($mysql->connect_errno) {
+        echo ('FAIL: Could not connect: ' . $mysql->connect_error);
+        return false;
+    }
+    return $mysql;
+}
+
+function getPrivateKey() {    
+    $mysql = connectDatabase();
+    $query = 'SELECT paramValue FROM masterpassword_parameters WHERE paramName=?';    
+    return getOneValueFromDataBase($mysql, $query, 'privateKey');    
+}
+
+function getCAPTHCAKey() {    
+    $mysql = connectDatabase();
+    $query = 'SELECT paramValue FROM masterpassword_parameters WHERE paramName=?';    
+    return getOneValueFromDataBase($mysql, $query, 'captchaKey');    
+}
+
+function getBaseURL() {
+    return "http://masterpassword.armyr.se/php_scripts/";
 }
 
 function authenticateUser($mysql, $username, $password) {

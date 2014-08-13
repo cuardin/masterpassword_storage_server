@@ -34,6 +34,15 @@ class UtilitiesTest extends UnitTestCase {
         deleteUser( $this->mysql, $this->username );
     }
 
+    public function testDatabaseConnect() {
+        $mysql = connectDatabase();
+        $this->assertNotNull( $mysql );        
+    }    
+
+    public function testGetGlobalSeed() {
+        $seed = getGlobalSeed();
+        $this->assertEqual("1", $seed);
+    }
     public function testRandString() {
         $length = 32;
         $string1 = rand_string($length);
