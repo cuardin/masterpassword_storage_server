@@ -44,9 +44,9 @@ try {
         throw new Exception( "Verification key did not match stored key." );
     }
         
-    echo "<h1>OK</h1>";
+    echo "OK";
 } catch ( Exception $e ) {    
-    echo ( "<h1>FAIL</h1>" );
+    echo ( "FAIL: " );
     echo ( $e->getMessage() );
 }
 ?> 

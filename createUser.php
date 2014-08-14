@@ -68,7 +68,7 @@ try {
     echo "OK";
 
 } catch (Exception $e) {
-    echo ( "<h1>FAIL</h1> " . $e->getMessage() );
+    echo ( "FAIL: " . $e->getMessage() );
 }
 ?> 
 
