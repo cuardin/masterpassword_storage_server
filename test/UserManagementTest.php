@@ -123,7 +123,42 @@ class UserManagementTest extends WebTestCase {
                 "username=$this->username&password=$this->password" );                
         $this->assertText('OK');
     }
+
+    function testEradicateUserSimple() {                
+        insertUser($this->mysql, $this->username, 
+               $this->verificationKey, $this->email);                
+        validateUser( $this->mysql, $this->username, 
+                $this->password );
         
+        $this->get( getBaseURL() . "eradicateUser.php?" .
+                "username=$this->username&password=$this->password&" .
+                "privateKey=--");                
+        $this->assertText( 'OK');                 
+    }
+
+    function testEradicateUserBadPassword() {                
+        insertUser($this->mysql, $this->username, 
+               $this->verificationKey, $this->email);                
+        validateUser( $this->mysql, $this->username, 
+                $this->password );
+        
+        $this->get( getBaseURL() . "eradicateUser.php?" .
+                "username=$this->username&password=badPassword&" .
+                "privateKey=$this->privateKey");                
+        $this->assertText( 'FAIL' );                 
+    }
+
+    function testEradicateUserBadPrivateKey() {                
+        insertUser($this->mysql, $this->username, 
+               $this->verificationKey, $this->email);                
+        validateUser( $this->mysql, $this->username, 
+                $this->password );
+        
+        $this->get( getBaseURL() . "eradicateUser.php?" .
+                "username=$this->username&password=badPassword&" .
+                "privateKey=--");                
+        $this->assertText( 'FAIL' );                 
+    }
 }
 
 
