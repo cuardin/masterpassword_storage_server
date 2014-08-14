@@ -65,7 +65,7 @@ try {
     mail($to, $subject, $message, $headers);
 
 
-    echo "<p>User account created successfully. Check your email and click the link to activate your account.</p>";
+    echo "OK";
 
 } catch (Exception $e) {
     echo ( "<h1>FAIL</h1> " . $e->getMessage() );

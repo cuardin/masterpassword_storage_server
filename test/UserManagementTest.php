@@ -37,7 +37,7 @@ class UserManagementTest extends WebTestCase {
                 "username=$this->username&password1=$this->password&" .
                 "password2=$this->password&" .
                 "email=$this->email&privateKey=$this->userCreationKey");        
-        $this->assertText('User account created successfully');                 
+        $this->assertText('OK');                 
     }
     
     function testCreateUserBadKey() {        
@@ -110,7 +110,7 @@ class UserManagementTest extends WebTestCase {
         $this->get(getBaseURL() . "createUser.php?" .
                 "username=$this->username&email=test@armyr.se&".
                 "privateKey=" . getUserCreationKey() );        
-        $this->assertText('successfully');
+        $this->assertText('OK');
         
         $this->assertEqual($this->username, getOneValueFromUserList($this->mysql, "username", $this->username));
         
