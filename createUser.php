@@ -24,7 +24,7 @@ try {
     $isHuman = false;
     try {
         $privateKeyProvided = getParameter($mysql, "privateKey");        
-        if (!strcmp($privateKeyProvided, getPrivateKey())) {           
+        if (!strcmp($privateKeyProvided, getUserCreationKey())) {           
             $isHuman = true;
         }
     } catch (Exception $e) {

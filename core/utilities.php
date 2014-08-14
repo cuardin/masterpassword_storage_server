@@ -36,6 +36,13 @@ function getPrivateKey() {
     return getOneValueFromDataBase($mysql, $query, 'privateKey');    
 }
 
+function getUserCreationKey() {    
+    $mysql = connectDatabase();
+    $query = 'SELECT paramValue FROM masterpassword_parameters WHERE paramName=?';    
+    return getOneValueFromDataBase($mysql, $query, 'userCreationKey');    
+}
+
+
 function getCAPTHCAKey() {    
     $mysql = connectDatabase();
     $query = 'SELECT paramValue FROM masterpassword_parameters WHERE paramName=?';    
