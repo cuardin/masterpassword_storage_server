@@ -128,7 +128,7 @@ class FileManagementTests extends WebTestCase {
         $this->get(getBaseURL() . "getFile.php?" .
                 "username=$this->username&password=$this->password&" .
                 "fileID=$fileID");        
-        $this->assertText($this->fileContents);                
+        $this->assertText("OK: $this->fileContents"); 
 
     }
 

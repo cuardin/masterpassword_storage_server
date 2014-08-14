@@ -19,7 +19,7 @@ try {
             } else if (!base64_decode($fileData, true)) {
                 echo "FAIL: Value in database is not Base64 encoded. This is very serious.";
             } else {
-                echo $fileData;
+                echo "OK: $fileData";
             }
         } else {
             echo "FAIL: Wrong owner of file";
