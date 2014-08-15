@@ -103,8 +103,10 @@ class UserManagementTest extends WebTestCase {
         $this->assertEqual("0", $keyInDB);
         
         $this->get(getBaseURL() . "resetPassword.php?" .
-                "username=$this->username&privateKey=" . getPrivateKey() );        
+                "username=$this->username&privateKey=" . getUserCreationKey() .
+                "&test=true");        
         $this->assertText('OK');
+        $this->assertText("New password email");
         
         //Make sure password was changed.
         $keyInDB = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        

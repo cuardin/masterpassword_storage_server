@@ -40,19 +40,6 @@ class UserManagementTestForm extends WebTestCase {
         $this->assertText( "OK" );
     }
          
-    function testResetPasswordSimple() {        
-        insertUser($this->mysql, $this->username, 
-               $this->verificationKey, $this->email);        
-        
-        validateUser( $this->mysql, $this->username, $this->password );
-        
-        $this->get(getBaseURL() . "forms/resetPasswordForm.php");        
-        $this->assertResponse( array(200) );
-        $this->assertTrue( $this->setField("username", $this->username));
-        $this->assertTrue( $this->setField("privateKey", $this->privateKey));
-        $this->clickSubmit();
-        $this->assertText( "successfully" );
-    }
 }
 
 

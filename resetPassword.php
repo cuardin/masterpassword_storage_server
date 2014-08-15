@@ -3,6 +3,8 @@
 require_once ( './core/utilities.php' );
 require_once ( './core/userManagementCore.php' );
 require_once ( './core/recaptchalib.php' );
+require_once ( './core/Mailer.php' );
+require_once ( './test/MailerStub.php' );
 
 
 try {
@@ -14,21 +16,18 @@ try {
     $username = getParameter($mysql, "username");
     $privateKey = getParameter($mysql, "privateKey");
 
-    if (strcmp($privateKey, getPrivateKey())) {
-
-        // RECAPTCHA thinggy....
-
-        $challenge = getParameter($mysql, "recaptcha_challenge_field");
-        $response = getParameter($mysql, "recaptcha_response_field");
-
-        $privatekey = getCAPTHCAKey();
-        $resp = recaptcha_check_answer($privatekey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
-
-        if (!$resp->is_valid) {
-            die("<p>FAIL: The reCAPTCHA wasn't entered correctly.</p>" .
-                    "<p>Go to <a href='resetPassword.php'>back</a> and try it again.</p>" .
-                    "<p>reCAPTCHA said: " . $resp->error . "</p>");
+    $mailer = new Mailer();
+    try {
+        $isTest = getParameter($mysql, "test");
+        if ( !strcmp($isTest, 'true') ) {
+           $mailer = new MailerStub();
         }
+    } catch ( Exception $e ) {
+        //DO nothing.
+    }
+
+    if (strcmp($privateKey, getUserCreationKey())) {
+        throw new Exception("Incorrect anti-spam key");
     }
 
     resetPassword($mysql, $username, $verificationKey );
@@ -40,9 +39,10 @@ try {
     $from = "reset_password_masterpassword@armyr.se";
     $headers = "From:" . $from;
     
-    mail($to, $subject, $message, $headers);
+    echo "OK"; 
+    $mailer->sendEmail($email, $subject, $message, $from);
 
-    echo "OK: Password reset request sent successfully.";
+    
 } catch (Exception $e) {
     echo "FAIL: " . $e->getMessage();
 }
