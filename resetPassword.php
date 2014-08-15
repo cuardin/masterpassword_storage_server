@@ -33,17 +33,16 @@ try {
 
     resetPassword($mysql, $username, $verificationKey );
     
-
-
-//Now send an email
+    //Now send an email
     $to = getOneValueFromUserList($mysql, "email", $username);
     $subject = "New password email";
     $message = "Hello! you have requested a password reset. Your verification key is: " . $randomPassword;
     $from = "reset_password_masterpassword@armyr.se";
     $headers = "From:" . $from;
+    
     mail($to, $subject, $message, $headers);
 
-    echo "<h1>OK</h1> Password reset request sent successfully.";
+    echo "OK: Password reset request sent successfully.";
 } catch (Exception $e) {
     echo "FAIL: " . $e->getMessage();
 }

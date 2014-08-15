@@ -11,17 +11,9 @@
  *
  * @author cuardin
  */
-class MailerStub implements IMailer {
-    public $to;
-    public $subject;
-    public $message;
-    public $from;
-    
+class MailerStub implements IMailer {        
     public function sendEmail($to, $subject, $message, $from) {
-        $this->to = $to;
-        $this->subject = $subject;
-        $this->message = $message;
-        $this->from = $from;
+        echo "$to\n$subject\n$message\n$from";        
     }
     
 

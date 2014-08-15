@@ -36,8 +36,14 @@ class UserManagementTest extends WebTestCase {
         $this->get( getBaseURL() . "/createUser.php?" .
                 "username=$this->username&password1=$this->password&" .
                 "password2=$this->password&" .
-                "email=$this->email&privateKey=$this->userCreationKey");        
-        $this->assertText('OK');                 
+                "email=$this->email&privateKey=$this->userCreationKey&" .
+                "test=true");        
+        $this->assertText("OK");                 
+        $this->assertText("Verification email");
+        $this->assertText("Hello! Press this link to verify this email address: " .
+            "http://masterpassword.armyr.se/php_scripts/verifyEmail.php?username=" .
+            $this->username );
+        $this->assertText("create_new_user_masterpassword@armyr.se" );                 
     }
     
     function testCreateUserBadKey() {        
