@@ -90,8 +90,7 @@ class UserManagementTest extends WebTestCase {
                 "username=$this->username&" .
                 "verificationKey=--");        
         $this->assertText('FAIL');                 
-    }
-    
+    }    
     
     function testResetPasswordSimple() {
         //Create a user to edit.
@@ -99,19 +98,24 @@ class UserManagementTest extends WebTestCase {
                $this->verificationKey, $this->email);        
         
         validateUser( $this->mysql, $this->username, $this->password );
-        $keyInDB = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
+        $passwordInDB = getOneValueFromUserList($this->mysql, "password", $this->username);        
+        $keyInDB = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);                        
         $this->assertEqual("0", $keyInDB);
         
         $this->get(getBaseURL() . "resetPassword.php?" .
                 "username=$this->username&privateKey=" . getUserCreationKey() .
                 "&test=true");        
         
-        //Make sure password was changed.
+        //Make sure verification key was changed.
         $keyInDBChanged = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
         $this->assertNotEqual("0", $keyInDBChanged);
         
+        //Make sure password was not changed.
+        $passwordInDBNoChange = getOneValueFromUserList($this->mysql, "password", $this->username);        
+        $this->assertEqual($passwordInDB, $passwordInDBNoChange);
+        
         //Check that the email sent contains the right pieces of text.
-        $this->assertText($keyInDB);
+        $this->assertText($keyInDBChanged);
         $this->assertText('OK');
         $this->assertText("New password email");    
 
