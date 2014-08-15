@@ -35,7 +35,7 @@ try {
     //Now send an email
     $to = getOneValueFromUserList($mysql, "email", $username);
     $subject = "New password email";
-    $message = "Hello! you have requested a password reset. Your verification key is: " . $randomPassword;
+    $message = "Hello! you have requested a password reset. Your verification key is: " . $verificationKey;
     $from = "reset_password_masterpassword@armyr.se";
     $headers = "From:" . $from;
     

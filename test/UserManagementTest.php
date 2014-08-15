@@ -105,12 +105,15 @@ class UserManagementTest extends WebTestCase {
         $this->get(getBaseURL() . "resetPassword.php?" .
                 "username=$this->username&privateKey=" . getUserCreationKey() .
                 "&test=true");        
-        $this->assertText('OK');
-        $this->assertText("New password email");
         
         //Make sure password was changed.
-        $keyInDB = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
-        $this->assertNotEqual("0", $keyInDB);
+        $keyInDBChanged = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
+        $this->assertNotEqual("0", $keyInDBChanged);
+        
+        //Check that the email sent contains the right pieces of text.
+        $this->assertText($keyInDB);
+        $this->assertText('OK');
+        $this->assertText("New password email");    
 
     }
     
@@ -120,7 +123,8 @@ class UserManagementTest extends WebTestCase {
                 "privateKey=" . getUserCreationKey() );        
         $this->assertText('OK');
         
-        $this->assertEqual($this->username, getOneValueFromUserList($this->mysql, "username", $this->username));
+        $this->assertEqual($this->username, 
+                getOneValueFromUserList($this->mysql, "username", $this->username));
         
         $this->get(getBaseURL() . "verifyEmail.php?" .
                 "username=$this->username&password=$this->password&".
