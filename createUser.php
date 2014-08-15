@@ -20,7 +20,8 @@ try {
     $mailer = new Mailer();
     try {
         $isTest = getParameter($mysql, "test");
-        if ( !strcmp($isTest, 'true') ) {
+        $privateKey = getParameter($mysql, "privateKey");
+        if ( !strcmp($isTest, 'true') && !strcmp($privateKey,  getPrivateKey() )) {
            $mailer = new MailerStub();
         }
     } catch ( Exception $e ) {
@@ -32,10 +33,10 @@ try {
         throw new Exception('User name allready exists: ' . $userNameStored);
     }
         
-    //Check if we have a recaptcha or a private key
+    //Check if we have a recaptcha a user creation key
     $isHuman = false;
     try {
-        $privateKeyProvided = getParameter($mysql, "privateKey");        
+        $privateKeyProvided = getParameter($mysql, "userCreationKey");        
         if (!strcmp($privateKeyProvided, getUserCreationKey())) {           
             $isHuman = true;
         }
@@ -43,25 +44,8 @@ try {
         //Do nothing.
     }
 
-    if (!$isHuman) {
-        // RECAPTCHA thinggy....
-        $challenge = getParameter($mysql, "recaptcha_challenge_field");
-        $response = getParameter($mysql, "recaptcha_response_field");
-
-        $privateCAPTHCAkey = getCAPTHCAKey();
-        $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
-
-        if (!$resp->is_valid) {
-            throw new Exception("<p>The reCAPTCHA wasn't entered correctly.</p>" .
-                    "<p>Go to <a href='createUserForm.php'>back</a> and try it again.</p>" .
-                    "<p>reCAPTCHA said: " . $resp->error . "</p>");
-        } else {
-            $isHuman = true;
-        }
-    }
-
     if ( !$isHuman ) {
-        throw new Exception ( "Proof of humanity failed" );
+        throw new Exception ( "Anti-spam key did not match" );
     }
     
     insertUser($mysql, $username, $verificationKey, $email);
