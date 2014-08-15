@@ -14,19 +14,20 @@ try {
 
     //Escape all the user input to be SQL safe.
     $username = getParameter($mysql, "username");
-    $privateKey = getParameter($mysql, "privateKey");
+    $userCreationKey = getParameter($mysql, "userCreationKey");
 
     $mailer = new Mailer();
     try {
         $isTest = getParameter($mysql, "test");
-        if ( !strcmp($isTest, 'true') ) {
+        $privateKey = getParameter($mysql, "privateKey");
+        if ( !strcmp($isTest, 'true') && !strcmp($privateKey,  getPrivateKey() )) {
            $mailer = new MailerStub();
         }
     } catch ( Exception $e ) {
         //DO nothing.
     }
 
-    if (strcmp($privateKey, getUserCreationKey())) {
+    if (strcmp($userCreationKey, getUserCreationKey())) {
         throw new Exception("Incorrect anti-spam key");
     }
 
