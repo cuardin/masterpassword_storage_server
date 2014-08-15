@@ -6,8 +6,7 @@ class AllTests extends TestSuite {
         $this->TestSuite('All tests');        
         $this->addFile('UtilitiesTest.php');
         $this->addFile('UserManagementCoreTest.php');
-        $this->addFile('UserManagementTest.php');
-        $this->addFile('UserManagementTestForm.php');        
+        $this->addFile('UserManagementTest.php');        
         $this->addFile('AuthenticateUserCoreTest.php');
         $this->addFile('AuthenticateUserTest.php');
         $this->addFile('FileManagementTests.php');
