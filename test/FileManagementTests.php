@@ -75,7 +75,7 @@ class FileManagementTests extends WebTestCase {
        
         $this->get(getBaseURL() . "deleteFile.php?" .
                 "username=$this->username&password=$this->password&" .
-                "fileID=$fileID");        
+                "filename=$this->fileName");        
         $this->assertText('OK');                
 
         

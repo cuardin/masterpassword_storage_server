@@ -66,7 +66,7 @@ class FileManagementCoreTest extends UnitTestCase {
                 getOneValueFromFileList($this->mysql, "fileContents", $fileID));
         
         //Now delete the file
-        deleteFile( $this->mysql, $fileID);
+        deleteFile( $this->mysql, $this->username, $this->fileName);
         
         //Check that we actually made the file as well.
         $this->assertEqual( "", 

@@ -8,18 +8,14 @@ try {
 
     $username = getParameter($mysql, "username");
     $password = getParameter($mysql, "password");
-    $fileID = getParameter($mysql, "fileID");
+    $filename = getParameter($mysql, "filename");
 
-    if ( authenticateUser($mysql, $username, $password)) {
-        if ( verifyOwnerOfFile($mysql, $username, $fileID )) {
-            if ( deleteFile($mysql, $fileID)) {
-                echo "OK";
-            } else {
-                echo "FAIL: Error deleting file";
-            }
+    if ( authenticateUser($mysql, $username, $password)) {        
+        if ( deleteFile($mysql, $username, $filename)) {
+            echo "OK";
         } else {
-            echo "FAIL: Wrong owner of file";
-        }
+            echo "FAIL: Error deleting file";
+        }        
     } else {
         echo "FAIL: Authentication failed";
     }   

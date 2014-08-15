@@ -26,12 +26,12 @@ function insertFile($mysql, $username, $fileName, $fileContents) {
     return $mysql->insert_id;
 }
 
-function deleteFile($mysql, $fileID) {
-    $query = "DELETE FROM masterpassword_files WHERE fileKey=?";
+function deleteFile($mysql, $username, $fileName) {
+    $query = "DELETE FROM masterpassword_files WHERE username=? AND filename=?";
 
     $stmt = $mysql->prepare($query);
     if ($stmt) {
-        $stmt->bind_param('s', $fileID);
+        $stmt->bind_param('ss', $username, $fileName);
 
         $stmt->execute();
         $stmt->close();
