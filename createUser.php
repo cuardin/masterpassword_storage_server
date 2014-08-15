@@ -3,6 +3,7 @@
 require_once ( './core/utilities.php' );
 require_once ( './core/userManagementCore.php' );
 require_once ( './core/recaptchalib.php' );
+require_once ( './core/Mailer.php' );
 
 
 
@@ -54,15 +55,14 @@ try {
     
     insertUser($mysql, $username, $verificationKey, $email);
     
-    //Now send an email
-    $to = $email;
+    //Now send an email    
     $subject = "Verification email";
     $message = "Hello! Press this link to verify this email address: " .
             "http://masterpassword.armyr.se/php_scripts/verifyEmail.php?username=" .
             $username . "&verificationKey=" . $verificationKey;
-    $from = "create_new_user_rightboard@armyr.se";
-    $headers = "From:" . $from;
-    mail($to, $subject, $message, $headers);
+    $from = "create_new_user_rightboard@armyr.se";    
+    $mailer = new Mailer();
+    $mailer->sendEmail($email, $subject, $message, $from);
 
 
     echo "OK";
