@@ -16,11 +16,14 @@ try {
     $email = getParameter($mysql, "email");
     
     $mailer = new Mailer();
-    
-    $isTest = getParameter($mysql, "test");
-    $privateKey = getParameter($mysql, "privateKey");
-    if ( !strcmp($isTest, 'true') && !strcmp($privateKey,  getPrivateKey() )) {
-        $mailer = new MailerStub();
+    try {
+        $isTest = getParameter($mysql, "test");
+        $privateKey = getParameter($mysql, "privateKey");
+        if ( !strcmp($isTest, 'true') && !strcmp($privateKey,  getPrivateKey() )) {
+            $mailer = new MailerStub();
+        }
+    } catch ( Exception $e ) {
+        
     }
     
     $userNameStored = getOneValueFromUserList($mysql, 'username', $username);
