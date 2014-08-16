@@ -9,21 +9,17 @@ try {
 
     $username = getParameter($mysql, "username");
     $password = getParameter($mysql, "password");
-    $fileID = getParameter($mysql, "fileID");
+    $filename = getParameter($mysql , "filename");
 
-    if (authenticateUser($mysql, $username, $password)) {
-        if (verifyOwnerOfFile($mysql, $username, $fileID)) {
-            $fileData = getOneValueFromFileList($mysql, 'fileContents', $fileID);
+    if (authenticateUser($mysql, $username, $password)) {        
+            $fileData = getOneValueFromFileList($mysql, 'fileContents', $username, $filename);
             if ($fileData == null) {
                 echo "FAIL: No file data returned.";
             } else if (!base64_decode($fileData, true)) {
                 echo "FAIL: Value in database is not Base64 encoded. This is very serious.";
             } else {
                 echo "OK: $fileData";
-            }
-        } else {
-            echo "FAIL: Wrong owner of file";
-        }
+            }        
     } else {
         echo "FAIL: Authnetication failed";
     }

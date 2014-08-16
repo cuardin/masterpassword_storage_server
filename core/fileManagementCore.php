@@ -26,9 +26,11 @@ function insertFile($mysql, $username, $fileName, $fileContents) {
     return $mysql->insert_id;
 }
 
-function deleteFile($mysql, $username, $fileName) {
+function deleteFile($mysql, $username, $fileName) {    
+    if ( !fileExists($mysql, $username, $fileName)) {
+        return false;
+    }
     $query = "DELETE FROM masterpassword_files WHERE username=? AND filename=?";
-
     $stmt = $mysql->prepare($query);
     if ($stmt) {
         $stmt->bind_param('ss', $username, $fileName);
@@ -36,10 +38,35 @@ function deleteFile($mysql, $username, $fileName) {
         $stmt->execute();
         $stmt->close();
     } else {
-        echo 'FAIL: Statement creation failed.';
-        return false;
+        throw new Exception("FAIL: Statement creation failed.");        
     }
     return true;
+}
+
+function fileExists($mysql, $username, $filename) {
+    $stmt = $mysql->prepare("SELECT * FROM masterpassword_files WHERE username=? AND filename=?");
+    if (!$stmt) {
+        throw new Exception("SQL Syntax error");
+    }
+    if (!$stmt->bind_param('ss', $username, $filename)) {
+        throw new Exception("Error executing SQL statement");
+    }
+    if (!$stmt->execute()) {
+        throw new Exception("Error executing SQL statament");
+    }
+    $res = $stmt->get_result();
+    if (!$res) {
+        return false;
+    }
+
+    if ( $res->num_rows == 1 ) {
+        return true;        
+    } 
+    if ( $res->num_rows == 0 ) {
+        return false;
+    }
+    echo $res->num_rows;
+    throw new Exception("More than one identical file found. This should not happen.");
 }
 
 function getNumberOfFilesBelongingToUser($mysql, $username) {
@@ -84,15 +111,15 @@ function deleteAllFilesBelongingToUser($mysql, $username) {
     }
 }
 
-function overwriteFile($mysql, $fileID, $fileContents) {
-    $query = "UPDATE masterpassword_files SET fileContents=? WHERE fileKey=?";
+function overwriteFile($mysql, $username, $filename, $fileContents) {
+    $query = "UPDATE masterpassword_files SET fileContents=? WHERE username=? AND filename=?";
     //echo $query;
     try {
         $stmt = $mysql->prepare($query);
         if (!$stmt) {
             throw new Exception('Error preparing sql statement');
         }
-        if (!$stmt->bind_param('ss', $fileContents, $fileID)) {
+        if (!$stmt->bind_param('sss', $fileContents, $username, $filename)) {
             throw new Exception('Error binding parameters');
         }
         if (!$stmt->execute()) {
@@ -107,20 +134,33 @@ function overwriteFile($mysql, $fileID, $fileContents) {
     }
 }
 
-function getOneValueFromFileList($mysql, $field, $fileKey) {
+function getOneValueFromFileList($mysql, $field, $username, $filename) {
     if (preg_match('/[^a-z]/i', $field)) {
         return null;
     }
-    $query = 'SELECT ' . $field . ' FROM masterpassword_files WHERE fileKey=?';
-    return getOneValueFromDataBase($mysql, $query, $fileKey);
-}
-
-function verifyOwnerOfFile($mysql, $username, $fileID) {
-
-    $usernameStored = getOneValueFromFileList($mysql, 'username', $fileID);
-    if (strcmp($usernameStored, $username)) {        
-        return false;
+    $query = 'SELECT ' . $field . ' FROM masterpassword_files WHERE username=? AND filename=?';
+    $stmt = $mysql->prepare($query);
+    
+    $value = ''; //Initialize
+    if (!$stmt) {
+        throw new Exception ( "SQL Syntax Error");
+    }   
+    if ( !$stmt->bind_param('ss', $username, $filename) ) {
+        throw new Exception ( "Error binding parameter");
     }
+    if ( !$stmt->execute() ) {
+        throw new Exception( "Error executing SQL statement");
+    }
+    if ( !$stmt->bind_result($value) ) {
+        throw new Exception ( "Error binding result");
+    }    
+    if ( $stmt->fetch() === false ) {
+        throw new Exception ( "Error fetching data" );
+    }    
+    if ( !$stmt->close() ) {
+        throw new Exception( "Error closing statemebt");
+    }
+    
+    return $value;
 
-    return true;
 }

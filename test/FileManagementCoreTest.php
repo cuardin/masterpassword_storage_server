@@ -41,7 +41,7 @@ class FileManagementCoreTest extends UnitTestCase {
     public function testDeleteAllFilesBelongingToUser() {
         //Createa an additional file
         insertFile($this->mysql, $this->username, 
-                $this->fileName, $this->fileContents);
+                "otherFileName", $this->fileContents);
         //Nw delete all files we own
         deleteAllFilesBelongingToUser($this->mysql, $this->username );        
         
@@ -54,7 +54,7 @@ class FileManagementCoreTest extends UnitTestCase {
     public function testInsertAndDeleteFileSimple() {        
         //Create an additional file
         $fileID = insertFile($this->mysql, $this->username, 
-                $this->fileName, "testInsertFileSimple");        
+                "secondFile", "testInsertFileSimple");        
         $this->assertTrue( $fileID > 0 );
         
         //Check that the user has a total of 2 files.
@@ -63,54 +63,70 @@ class FileManagementCoreTest extends UnitTestCase {
         
         //Check that we actually made the file as well.
         $this->assertEqual( "testInsertFileSimple", 
-                getOneValueFromFileList($this->mysql, "fileContents", $fileID));
+                getOneValueFromFileList($this->mysql, "fileContents", $this->username, "secondFile"));
         
         //Now delete the file
-        deleteFile( $this->mysql, $this->username, $this->fileName);
+        deleteFile( $this->mysql, $this->username, "secondFile");
         
         //Check that we actually made the file as well.
         $this->assertEqual( "", 
-                getOneValueFromFileList($this->mysql, "fileContents", $fileID));       
+                getOneValueFromFileList($this->mysql, "fileContents", $this->username, "secondFile"));       
     }    
     
+    public function testFileExists() {        
+        //Check thatt the standard file exists.
+        $this->assertTrue(fileExists($this->mysql, $this->username,$this->fileName));
+        
+        //Check that the same file by a different user does not exist.
+        $this->assertFalse(fileExists($this->mysql, "anotherUser",$this->fileName));
+        
+        //Check that a different file by the same user does not exist.
+        $this->assertFalse(fileExists($this->mysql, $this->username,"anotherFile"));
+    }
+    
+    public function testDeleteFileBelongingToOtherUser() {        
+        //DElete a file belonging to another user.
+        $OK = deleteFile($this->mysql, "anotherUser", $this->fileName );        
+        
+        //Check that we got an error.
+        $this->assertFalse($OK);
+        
+    }
+
     public function testGetFileSimple() {        
-        $fileID = insertFile($this->mysql, $this->username, 
-                $this->fileName, $this->fileContents);        
-        $content = getOneValueFromFileList($this->mysql, "fileContents", $fileID);
+        $content = getOneValueFromFileList($this->mysql, "fileContents", $this->username, $this->fileName);
         $this->assertEqual($content, $this->fileContents );
     }        
     
     public function testOverwriteFileSimple() {        
-        //Create an additional file
-        $fileID = insertFile($this->mysql, $this->username, 
-                $this->fileName, $this->fileContents);        
-        $this->assertTrue( $fileID > 0 );        
-                
+        //overwrite the standard file        
         $newContent = "testOverwriteFileSimpleContent";
-                
-        //Now overwrite the file
-        overwriteFile( $this->mysql, $fileID, $newContent);
+                        
+        overwriteFile( $this->mysql, $this->username, $this->fileName, $newContent);
         
         //Check that we actually made the file as well.
         $this->assertEqual( $newContent, 
-                getOneValueFromFileList($this->mysql, "fileContents", $fileID));                      
+                getOneValueFromFileList($this->mysql, "fileContents", $this->username, $this->fileName));                      
                 
     }
     
-    public function testOverwriteFileWrongID() {        
-        //Create an additional file
-        $fileID = insertFile($this->mysql, $this->username, 
-                $this->fileName, $this->fileContents);        
-        $this->assertTrue( $fileID > 0 );
-                      
+    public function testOverwriteFileWrongName() {        
+        //Now overwrite the standard file                      
         $newContent = "testOverwriteFileSimpleContent";
-        //Now overwrite the file
-        overwriteFile( $this->mysql, -1, $newContent);
+
+        overwriteFile( $this->mysql, $this->username, "wrongFileName", $newContent);
         
         //Check that we actually made the file as well.
         $this->assertEqual( $this->fileContents, 
-                getOneValueFromFileList($this->mysql, "fileContents", $fileID));       
+                getOneValueFromFileList($this->mysql, "fileContents", $this->username, $this->fileName));       
     }
+    
+    public function testGetOneValueFromFileList()
+    {
+        $value = getOneValueFromFileList($this->mysql, "fileName", $this->username, $this->fileName);
+        $this->assertEqual($value, $this->fileName);
+    }
+
 }
 
 

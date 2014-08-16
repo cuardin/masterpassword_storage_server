@@ -55,13 +55,7 @@ class UtilitiesTest extends UnitTestCase {
         $value = getOneValueFromUserList($this->mysql, "username", $this->username);
         $this->assertEqual($value, $this->username);
     }
-    
-    public function testGetOneValueFromFileList()
-    {
-        $value = getOneValueFromFileList($this->mysql, "fileName", $this->fileID );
-        $this->assertEqual($value, $this->fileName);
-    }
-    
+        
     public function testGetOneValueFromDataBase() {
         $query = 'SELECT email FROM masterpassword_users WHERE username=?';    
         $email = getOneValueFromDataBase($this->mysql, $query, $this->username);
@@ -86,17 +80,7 @@ class UtilitiesTest extends UnitTestCase {
             
         $this->assertNull( $value );
     }
-    
-    public function testVerifyOwnerOfFileTrue() {
-        $isOwner = verifyOwnerOfFile($this->mysql, $this->username, $this->fileID);
-        $this->assertTrue( $isOwner );
-    }
-
-    public function testVerifyOwnerOfFileFalse() {
-        $isOwner = verifyOwnerOfFile($this->mysql, $this->username, -1);
-        $this->assertFalse( $isOwner );
-    }
- 
+     
     public function testGetParameterSimpleGET ()
     {
         $_GET["a"] = "b";

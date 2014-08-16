@@ -71,7 +71,7 @@ class FileManagementTests extends WebTestCase {
         
         //Check that we actually made the file as well.
         $this->assertEqual( $this->fileContents, 
-                getOneValueFromFileList($this->mysql, "fileContents", $fileID));
+                getOneValueFromFileList($this->mysql, "fileContents", $this->username, $this->fileName));
        
         $this->get(getBaseURL() . "deleteFile.php?" .
                 "username=$this->username&password=$this->password&" .
@@ -81,7 +81,7 @@ class FileManagementTests extends WebTestCase {
         
         //Check that we actually deleted the file as well.
         $this->assertEqual( "", 
-                getOneValueFromFileList($this->mysql, "fileContents", $fileID));       
+                getOneValueFromFileList($this->mysql, "fileContents", $this->username, $this->fileName));       
     }    
     
     public function testDeleteFileBadPassword() {        
@@ -92,7 +92,7 @@ class FileManagementTests extends WebTestCase {
         
         //Check that we actually made the file as well.
         $this->assertEqual( $this->fileContents, 
-                getOneValueFromFileList($this->mysql, "fileContents", $fileID));
+                getOneValueFromFileList($this->mysql, "fileContents", $this->username, $this->fileName));
        
         $this->get(getBaseURL() . "deleteFile.php?" .
                 "username=$this->username&password=--&" .
@@ -103,20 +103,19 @@ class FileManagementTests extends WebTestCase {
 
     public function testDeleteFileWrongOwner() {        
         //Create an additional file
-        $fileID = insertFile($this->mysql, "testUser2", 
+        $fileID = insertFile($this->mysql, $this->username, 
                 $this->fileName, $this->fileContents);        
         $this->assertTrue( $fileID > 0 );        
         
         //Check that we actually made the file as well.
         $this->assertEqual( $this->fileContents, 
-                getOneValueFromFileList($this->mysql, "fileContents", $fileID));
+                getOneValueFromFileList($this->mysql, "fileContents", $this->username, $this->fileName));
        
         $this->get(getBaseURL() . "deleteFile.php?" .
-                "username=$this->username&password=$this->password&" .
-                "fileID=$fileID");        
+                "username=anotherUser&password=$this->password&" .
+                "filename=$this->fileName");        
         $this->assertText('FAIL');                
-        
-        deleteAllFilesBelongingToUser($this->mysql, "testUser2");
+                
     }
 
     public function testGetFileSimple() {        
@@ -127,7 +126,7 @@ class FileManagementTests extends WebTestCase {
        
         $this->get(getBaseURL() . "getFile.php?" .
                 "username=$this->username&password=$this->password&" .
-                "fileID=$fileID");        
+                "filename=$this->fileName");        
         $this->assertText("OK: $this->fileContents"); 
 
     }
@@ -190,20 +189,21 @@ class FileManagementTests extends WebTestCase {
     public function testOverwriteFileSimple() {        
         //Create an additional file
         $fileID = insertFile($this->mysql, $this->username, 
-                "$this->fileName"."OverWrite", $this->fileContents);        
+            $this->fileName, $this->fileContents);        
         $this->assertTrue( $fileID > 0 );        
-        
+                
         $newContent = "testOverwriteFileSimpleContent";
         
-        $this->get(getBAseURL() . "overwriteFile.php?" .
+        $this->get(getBaseURL() . "overwriteFile.php?" .
                 "username=$this->username&password=$this->password&" .
-                "fileID=$fileID&fileContents=$newContent");        
+                "filename=$this->fileName&fileContents=$newContent");        
         $this->assertText('OK');
 
         
         //Check that we actually deleted the file as well.
         $this->assertEqual( $newContent, 
-                getOneValueFromFileList($this->mysql, "fileContents", $fileID));       
+                getOneValueFromFileList($this->mysql, "fileContents", 
+                        $this->username, $this->fileName));       
     } 
         
     

@@ -10,17 +10,13 @@ try {
 
     $username = getParameter($mysql, "username");
     $password = getParameter($mysql, "password");
-    $fileID = getParameter($mysql,"fileID");
+    $filename = getParameter($mysql,"filename");
     $fileContents = getParameter($mysql, "fileContents");
 
     //Check that credentials are good.
-    if (authenticateUser($mysql, $username, $password)) {
-        if ( verifyOwnerOfFile($mysql, $username, $fileID ))  {
-            overwriteFile($mysql,$fileID,$fileContents);
-            echo "OK";            
-        } else {
-            echo "FAIL: Wrong owner of file";
-        }
+    if (authenticateUser($mysql, $username, $password)) {        
+        overwriteFile($mysql, $username, $filename, $fileContents);
+        echo "OK";                    
     } else {
         echo "FAIL: Authentication error";
     }
