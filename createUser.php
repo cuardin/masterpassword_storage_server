@@ -6,8 +6,6 @@ require_once ( './core/recaptchalib.php' );
 require_once ( './core/Mailer.php' );
 require_once ( './test/MailerStub.php' );
 
-
-
 try {
     $mysql = connectDatabase();
 
@@ -18,16 +16,13 @@ try {
     $email = getParameter($mysql, "email");
     
     $mailer = new Mailer();
-    try {
-        $isTest = getParameter($mysql, "test");
-        $privateKey = getParameter($mysql, "privateKey");
-        if ( !strcmp($isTest, 'true') && !strcmp($privateKey,  getPrivateKey() )) {
-           $mailer = new MailerStub();
-        }
-    } catch ( Exception $e ) {
-        //DO nothing.
+    
+    $isTest = getParameter($mysql, "test");
+    $privateKey = getParameter($mysql, "privateKey");
+    if ( !strcmp($isTest, 'true') && !strcmp($privateKey,  getPrivateKey() )) {
+        $mailer = new MailerStub();
     }
-
+    
     $userNameStored = getOneValueFromUserList($mysql, 'username', $username);
     if (!($userNameStored == null)) {
         throw new Exception('User name allready exists: ' . $userNameStored);
