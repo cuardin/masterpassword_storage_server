@@ -10,7 +10,7 @@ try {
 
     $username = getParameter($mysql, "username");
     $password = getParameter($mysql, "password");
-    $filename = getParameter($mysql,"filename");
+    $filename = getParameter($mysql,"fileName");
     $fileContents = getParameter($mysql, "fileContents");
 
     //Check that credentials are good.

@@ -8,7 +8,7 @@ try {
 
     $username = getParameter($mysql, "username");
     $password = getParameter($mysql, "password");
-    $filename = getParameter($mysql, "filename");
+    $filename = getParameter($mysql, "fileName");
 
     if ( authenticateUser($mysql, $username, $password)) {        
         if ( deleteFile($mysql, $username, $filename)) {

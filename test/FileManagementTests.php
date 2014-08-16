@@ -75,7 +75,7 @@ class FileManagementTests extends WebTestCase {
        
         $this->get(getBaseURL() . "deleteFile.php?" .
                 "username=$this->username&password=$this->password&" .
-                "filename=$this->fileName");        
+                "fileName=$this->fileName");        
         $this->assertText('OK');                
 
         
@@ -126,7 +126,7 @@ class FileManagementTests extends WebTestCase {
        
         $this->get(getBaseURL() . "getFile.php?" .
                 "username=$this->username&password=$this->password&" .
-                "filename=$this->fileName");        
+                "fileName=$this->fileName");        
         $this->assertText("OK: $this->fileContents"); 
 
     }
@@ -196,7 +196,7 @@ class FileManagementTests extends WebTestCase {
         
         $this->get(getBaseURL() . "overwriteFile.php?" .
                 "username=$this->username&password=$this->password&" .
-                "filename=$this->fileName&fileContents=$newContent");        
+                "fileName=$this->fileName&fileContents=$newContent");        
         $this->assertText('OK');
 
         
