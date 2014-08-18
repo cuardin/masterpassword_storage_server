@@ -7,7 +7,7 @@ SimpleTest::prefer(new TextReporter());
 
 class FileManagementTests extends WebTestCase {
     private $mysql = null;
-    private $username = "testUser";
+    private $username = "testUSER";
     private $password = "testPassword";
     private $verificationKey = "testKey";
     private $email = "test@armyr.se";
@@ -226,6 +226,25 @@ class FileManagementTests extends WebTestCase {
                 "fileName=anotherFileName");        
         $this->assertText("OK: false"); 
 
+    }
+    
+    public function testDeleteAllFilesBelongingToUser() {
+        //Createa an additional file
+        insertFile($this->mysql, $this->username, 
+                "aFirstFileName", $this->fileContents);
+        insertFile($this->mysql, $this->username, 
+                "otherFileName", $this->fileContents);
+        
+        //Nw delete all files we own
+        
+        $this->get(getBaseURL() . "deleteAllFilesBelongingToUser.php?" .
+            "username=$this->username&password=$this->password");        
+        $this->assertText("OK"); 
+        
+        //And check that they in fact dissappeared.
+        $numberOfFiles = getNumberOfFilesBelongingToUser ( $this->mysql, $this->username );
+        $this->assertEqual( 0, $numberOfFiles );
+        
     }
 
 }
