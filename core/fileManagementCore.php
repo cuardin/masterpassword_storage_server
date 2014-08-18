@@ -20,7 +20,7 @@ function insertFile($mysql, $username, $fileName, $fileContents) {
         if (!$stmt->close()) {
             throw new Exception("Error closing statement");
         }
-    } catch (Exception $e) {
+    } catch (Exception $e) {        
         throw new Exception(htmlspecialchars($mysql->error));
     }
     return $mysql->insert_id;

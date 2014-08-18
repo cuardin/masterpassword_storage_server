@@ -37,7 +37,7 @@ class FileManagementTests extends WebTestCase {
     }
 
     function testCreateNewFileSimple() {
-        $this->get(getBaseURL() . "createNewFile.php?" .
+        $this->get(getBaseURL() . "uploadFile.php?" .
                 "username=$this->username&password=$this->password&" .
                 "fileName=$this->fileName&fileContents=$this->fileContents");        
         $this->assertText('OK');                
@@ -46,7 +46,7 @@ class FileManagementTests extends WebTestCase {
     }
     
     function testCreateNewFileBadUsername() {
-        $this->get(getBaseURL() . "createNewFile.php?" .
+        $this->get(getBaseURL() . "uploadFile.php?" .
                 "username=--&password=$this->password&" .
                 "fileName=$this->fileName&fileContents=$this->fileContents");        
         $this->assertText('FAIL');                
@@ -55,7 +55,7 @@ class FileManagementTests extends WebTestCase {
     }
     
     function testCreateNewFileBadPassword() {
-        $this->get(getBaseURL() . "createNewFile.php?" .
+        $this->get(getBaseURL() . "uploadFile.php?" .
                 "username=$this->username&password=--&" .
                 "fileName=$this->fileName&fileContents=$this->fileContents");        
         $this->assertText('FAIL');                
@@ -194,7 +194,7 @@ class FileManagementTests extends WebTestCase {
                 
         $newContent = "testOverwriteFileSimpleContent";
         
-        $this->get(getBaseURL() . "overwriteFile.php?" .
+        $this->get(getBaseURL() . "uploadFile.php?" .
                 "username=$this->username&password=$this->password&" .
                 "fileName=$this->fileName&fileContents=$newContent");        
         $this->assertText('OK');

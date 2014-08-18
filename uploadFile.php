@@ -10,12 +10,16 @@ try {
 
     $username = getParameter($mysql, "username");
     $password = getParameter($mysql, "password");
-    $filename = getParameter($mysql,"fileName");
-    $fileContents = getParameter($mysql, "fileContents");
+    $fileName = getParameter($mysql,"fileName");
+    $fileContents = getParameter($mysql, "fileContents");    
 
     //Check that credentials are good.
     if (authenticateUser($mysql, $username, $password)) {        
-        overwriteFile($mysql, $username, $filename, $fileContents);
+        if ( fileExists($mysql, $username, $fileName) ) {            
+            overwriteFile($mysql, $username, $fileName, $fileContents);
+        } else {                        
+            insertFile($mysql, $username, $fileName, $fileContents);
+        }        
         echo "OK";                    
     } else {
         echo "FAIL: Authentication error";
