@@ -29,22 +29,17 @@ try {
             throw new Exception();
         }
 
-        $xml = new SimpleXMLElement('<xml/>');
+        $data = array();
 
         for ($row_no = $res->num_rows - 1; $row_no >= 0; $row_no--) {
             $res->data_seek($row_no);
             $row = $res->fetch_assoc();
-
-            $fileKey = htmlspecialchars($row['fileKey'] );            
-            $fileName = htmlspecialchars($row['fileName'] );
-
-            $fileEntry = $xml->addChild('file');
-            $fileEntry->addChild('fileID', $fileKey);            
-            $fileEntry->addChild('fileName', $fileName );
-        }
-
-        Header('Content-type: text/xml');
-        print($xml->asXML());
+            
+            $data[$row['fileName']] = $row['fileContents'];            
+        }       
+        
+        Header('Content-type: application/json');
+        print(json_encode($data));
     }
 } catch ( Exception $e )  {
     echo "FAIL: " . $e->getMessage();

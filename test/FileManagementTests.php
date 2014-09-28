@@ -3,6 +3,7 @@
 require_once('../simpletest/autorun.php');  
 require_once('../simpletest/web_tester.php');
 require_once('../core/fileManagementCore.php');
+require_once('../core/userManagementCore.php');
 SimpleTest::prefer(new TextReporter());
 
 class FileManagementTests extends WebTestCase {
@@ -167,11 +168,11 @@ class FileManagementTests extends WebTestCase {
        
         $this->get(getBaseURL() . "listFiles.php?" .
                 "username=$this->username&password=$this->password");        
-        $this->assertMime("text/xml");                
+        $this->assertMime("application/json");                
         $this->assertText("testListFilesSimple01Name");
         $this->assertText("testListFilesSimple02Name");        
-        $this->assertText("$fileID01");
-        $this->assertText("$fileID02");        
+        $this->assertText("testListFilesSimple01Content");
+        $this->assertText("testListFilesSimple02Content");        
     }
     
     public function testListFilesWrongPassword() {        
