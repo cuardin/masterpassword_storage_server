@@ -42,6 +42,7 @@ try {
         print(json_encode($data));
     }
 } catch ( Exception $e )  {
+    mb_http_output('UTF-8');
     echo "FAIL: " . $e->getMessage();
 }
 ?>

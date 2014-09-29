@@ -3,6 +3,8 @@
 require_once ('./core/utilities.php');
 require_once ('./core/fileManagementCore.php');
 
+init();
+
 try {
     $mysql = connectDatabase();
 

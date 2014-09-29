@@ -2,6 +2,8 @@
 
 require_once './core/utilities.php';
 
+init();
+
 try {                
     $globalSeed = getGlobalSeed ();
     echo "$globalSeed";

@@ -6,6 +6,7 @@ require_once ( './core/recaptchalib.php' );
 require_once ( './core/Mailer.php' );
 require_once ( './test/MailerStub.php' );
 
+init();
 
 try {
     $mysql = connectDatabase();

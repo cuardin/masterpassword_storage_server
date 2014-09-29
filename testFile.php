@@ -4,6 +4,7 @@ require_once ( './core/utilities.php' );
 require_once ( './core/userManagementCore.php' );
 require_once ( './core/recaptchalib.php' );
 
+init();
 
 try {
     $mysql = connectDatabase();

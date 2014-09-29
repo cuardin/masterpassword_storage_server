@@ -2,6 +2,10 @@
 
 require_once( dirname(__FILE__).'/utilitiesSecret.php' );
 
+function init() {
+    header('Content-Type: text/html; charset=utf-8');
+}
+
 function getGlobalSeed() {
     return "1";
 }
@@ -27,6 +31,7 @@ function connectDatabase() {
         echo ('FAIL: Could not connect: ' . $mysql->connect_error);
         return false;
     }
+    $mysql->set_charset('utf8'); //Set the charset to utf-8
     return $mysql;
 }
 
@@ -74,7 +79,7 @@ function authenticateUser($mysql, $username, $password) {
     $passwordStored = getOneValueFromUserList($mysql, "password", $username);  
     
     //Hash the password, using the salt stored
-    $passwordCrypt = crypt($password, $passwordStored);          
+    $passwordCrypt = crypt($password, $passwordStored);                  
     
     //Now check the fetched password against the stored
     if (strcmp($passwordStored, $passwordCrypt)) {
