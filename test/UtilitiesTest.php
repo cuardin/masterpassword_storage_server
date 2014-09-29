@@ -2,6 +2,7 @@
 require_once('../simpletest/autorun.php');  
 require_once('../core/utilities.php');
 require_once('../core/fileManagementCore.php');
+require_once('../core/userManagementCore.php');
 
 class UtilitiesTest extends UnitTestCase {
     

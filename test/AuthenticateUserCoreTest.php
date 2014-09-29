@@ -14,11 +14,12 @@ class authenticateUserCoreTest extends UnitTestCase {
     private $privateKey = null;
     
     public function setUp() {
-        $this->mysql = connectDatabase();
+        $this->mysql = connectDatabase();      
         $this->privateKey = getPrivateKey();
+        
         deleteUser( $this->mysql, $this->username );
         insertUser($this->mysql, $this->username, 
-                $this->verificationKey, $this->email);
+                $this->password, $this->verificationKey, $this->email);        
     }
     
     public function tearDown() {        
@@ -28,10 +29,11 @@ class authenticateUserCoreTest extends UnitTestCase {
     public function testAuthenticateUserSimple() {
         
         validateUser($this->mysql, $this->username, $this->password);
+        
         $this->assertTrue( authenticateUser($this->mysql, $this->username, 
                 $this->password) );
     }
-     
+    
     public function testAuthenticateUserNotValidated() {
         try {
             authenticateUser($this->mysql, $this->username, 

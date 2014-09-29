@@ -14,6 +14,7 @@ function rand_string($length) {
     $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     $size = strlen($chars);
+    $str = '';
     for ($i = 0; $i < $length; $i++) {
         $str .= $chars[rand(0, $size - 1)];
     }
@@ -55,7 +56,7 @@ function getCAPTHCAKey() {
 }
 
 function getBaseURL() {
-    return "http://masterpassword.armyr.se/php_scripts/";
+    return "http://192.168.56.101/php_scripts/";
 }
 
 function authenticateUser($mysql, $username, $password) {
@@ -82,7 +83,7 @@ function authenticateUser($mysql, $username, $password) {
     $passwordCrypt = crypt($password, $passwordStored);                  
     
     //Now check the fetched password against the stored
-    if (strcmp($passwordStored, $passwordCrypt)) {
+    if (strcmp($passwordStored, $passwordCrypt)) {        
         throw new Exception( "Wrong password" );
      }
 
@@ -124,6 +125,9 @@ function getOneValueFromDataBase($mysql, $query, $variable) {
         throw new Exception( "Error closing statemebt");
     }
     
+    if ( $value == '' ) {
+        $value = null;
+    }
     return $value;
     
 }

@@ -48,44 +48,59 @@ function fileExists($mysql, $username, $filename) {
     if (!$stmt) {
         throw new Exception("SQL Syntax error");
     }
+    
     if (!$stmt->bind_param('ss', $username, $filename)) {
         throw new Exception("Error executing SQL statement");
     }
+    
     if (!$stmt->execute()) {
         throw new Exception("Error executing SQL statament");
     }
-    $res = $stmt->get_result();
-    if (!$res) {
-        return false;
-    }
-
-    if ( $res->num_rows == 1 ) {
+    
+    if (!$stmt->store_result()) {
+        throw new Exception("Error storing result");
+    }            
+    
+    $num_rows = $stmt->num_rows;
+    
+    $stmt->free_result();
+    
+    $stmt->close();
+    
+    if ( $num_rows == 1 ) {
         return true;        
     } 
-    if ( $res->num_rows == 0 ) {
+    if ( $num_rows == 0 ) {
         return false;
     }
-    echo $res->num_rows;
+    
+    echo $num_rows;
     throw new Exception("More than one identical file found. This should not happen.");
 }
 
 function getNumberOfFilesBelongingToUser($mysql, $username) {
-    $stmt = $mysql->prepare("SELECT * FROM masterpassword_files WHERE username=?");
+    $stmt = $mysql->prepare("SELECT * FROM masterpassword_files WHERE username=?" );
     if (!$stmt) {
         throw new Exception("SQL Syntax error");
     }
     if (!$stmt->bind_param('s', $username)) {
         throw new Exception("Error executing SQL statement");
     }
+    
     if (!$stmt->execute()) {
         throw new Exception("Error executing SQL statament");
-    }
-    $res = $stmt->get_result();
-    if (!$res) {
-        throw new Exception("No results found");
-    }
-
-    return $res->num_rows;
+    }    
+    if (!$stmt->store_result()) {
+        throw new Exception("Error storing results");
+    }           
+    
+    $numRows = $stmt->num_rows;
+    
+    $stmt->free_result();
+    
+    $stmt->close();
+    
+    return $numRows;
 }
 
 function deleteAllFilesBelongingToUser($mysql, $username) {
@@ -151,6 +166,11 @@ function getOneValueFromFileList($mysql, $field, $username, $filename) {
     if ( !$stmt->execute() ) {
         throw new Exception( "Error executing SQL statement");
     }
+    
+    if ( !$stmt->store_result() ) {
+        throw new Exception ( "Error storing result");
+    }    
+    
     if ( !$stmt->bind_result($value) ) {
         throw new Exception ( "Error binding result");
     }    

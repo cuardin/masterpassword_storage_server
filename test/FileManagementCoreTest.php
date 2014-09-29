@@ -2,6 +2,7 @@
 require_once('../simpletest/autorun.php');  
 require_once('../core/utilities.php');
 require_once('../core/fileManagementCore.php');
+require_once('../core/userManagementCore.php');
 
 class FileManagementCoreTest extends UnitTestCase {
     
@@ -15,10 +16,16 @@ class FileManagementCoreTest extends UnitTestCase {
     private $fileContents = "testFileContentsFileManagementCore";
     private $fileID = null;
     
+    
     public function setUp() {
         $this->mysql = connectDatabase();
         $this->privateKey = getPrivateKey();
-                        
+        
+        //Clean first.
+        deleteAllFilesBelongingToUser($this->mysql, $this->username );            
+        deleteUser( $this->mysql, $this->username );    
+        
+        //Then setup.
         insertUser($this->mysql, $this->username, 
                 $this->verificationKey, $this->email);
         validateUser($this->mysql, $this->username, $this->password );
@@ -32,12 +39,14 @@ class FileManagementCoreTest extends UnitTestCase {
         
         deleteUser( $this->mysql, $this->username );
     }
+        
     
     public function testDoGetNumberOfFilesBelongingToUser() {
         $numberOfFiles = getNumberOfFilesBelongingToUser ( $this->mysql, $this->username );
         $this->assertEqual( 1, $numberOfFiles );
     }
-
+    
+    
     public function testDeleteAllFilesBelongingToUser() {
         //Createa an additional file
         insertFile($this->mysql, $this->username, 
@@ -52,6 +61,9 @@ class FileManagementCoreTest extends UnitTestCase {
     }
     
     public function testInsertAndDeleteFileSimple() {        
+        $numberOfFiles = getNumberOfFilesBelongingToUser ( $this->mysql, $this->username );
+        $this->assertEqual( 1, $numberOfFiles );        
+        
         //Create an additional file
         $fileID = insertFile($this->mysql, $this->username, 
                 "secondFile", "testInsertFileSimple");        
@@ -128,7 +140,6 @@ class FileManagementCoreTest extends UnitTestCase {
     }
 
 }
-
 
 
 ?>
