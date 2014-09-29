@@ -70,7 +70,7 @@ class UserManagementTest extends WebTestCase {
     }
     
     function testVerifyUserSimple() {        
-        insertUser($this->mysql, $this->username, 
+        insertUser($this->mysql, $this->username, $this->password, 
                 $this->verificationKey, $this->email);
         
         $this->get(getBaseURL() . "verifyEmail.php?" .
@@ -81,7 +81,7 @@ class UserManagementTest extends WebTestCase {
     }
     
     function testVerifyUserPrivateKey() {        
-        insertUser($this->mysql, $this->username, 
+        insertUser($this->mysql, $this->username, $this->password,
                 $this->verificationKey, $this->email);
         
         $this->get(getBaseURL() . "verifyEmail.php?" .
@@ -92,7 +92,7 @@ class UserManagementTest extends WebTestCase {
     }
     
     function testVerifyUserBadKey() {        
-        insertUser($this->mysql, $this->username, 
+        insertUser($this->mysql, $this->username, $this->password,
                 $this->verificationKey, $this->email);
         
         $this->get(getBaseURL() . "verifyEmail.php?" .
@@ -103,7 +103,7 @@ class UserManagementTest extends WebTestCase {
     
     function testResetPasswordSimple() {
         //Create a user to edit.
-        insertUser($this->mysql, $this->username, 
+        insertUser($this->mysql, $this->username, $this->password,
                $this->verificationKey, $this->email);        
         
         validateUser( $this->mysql, $this->username, $this->password );
@@ -153,7 +153,7 @@ class UserManagementTest extends WebTestCase {
     }
 
     function testEradicateUserSimple() {                
-        insertUser($this->mysql, $this->username, 
+        insertUser($this->mysql, $this->username, $this->password,
                $this->verificationKey, $this->email);                
         validateUser( $this->mysql, $this->username, 
                 $this->password );
@@ -165,7 +165,7 @@ class UserManagementTest extends WebTestCase {
     }
 
     function testEradicateUserBadPassword() {                
-        insertUser($this->mysql, $this->username, 
+        insertUser($this->mysql, $this->username, $this->password,
                $this->verificationKey, $this->email);                
         validateUser( $this->mysql, $this->username, 
                 $this->password );
@@ -177,7 +177,7 @@ class UserManagementTest extends WebTestCase {
     }
 
     function testEradicateUserBadPrivateKey() {                
-        insertUser($this->mysql, $this->username, 
+        insertUser($this->mysql, $this->username, $this->password,
                $this->verificationKey, $this->email);                
         validateUser( $this->mysql, $this->username, 
                 $this->password );

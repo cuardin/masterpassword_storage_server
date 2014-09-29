@@ -1,8 +1,7 @@
 <?php
 
-function insertUser($mysql, $username, $verificationKey, $email) {    
-
-    $password = "0";
+function insertUser($mysql, $username, $password, $verificationKey, $email) {    
+    
     $seed = "1";
     $query = "INSERT INTO masterpassword_users (username, password, verificationKey, seed, email)" .
             "VALUES (?, ?, ?, ?, ?)";
@@ -12,7 +11,7 @@ function insertUser($mysql, $username, $verificationKey, $email) {
         if (!$stmt) {
             throw new Exception('Error preparing sql statement');
         }
-        if (!$stmt->bind_param('sssis', $username, $password, $verificationKey, $seed, $email)) {
+        if (!$stmt->bind_param('sssis', $username, crypt($password), $verificationKey, $seed, $email)) {
             throw new Exception('Error binding parameters');
         }
         if (!$stmt->execute()) {

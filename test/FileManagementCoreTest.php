@@ -26,7 +26,7 @@ class FileManagementCoreTest extends UnitTestCase {
         deleteUser( $this->mysql, $this->username );    
         
         //Then setup.
-        insertUser($this->mysql, $this->username, 
+        insertUser($this->mysql, $this->username, $this->password,
                 $this->verificationKey, $this->email);
         validateUser($this->mysql, $this->username, $this->password );
                 

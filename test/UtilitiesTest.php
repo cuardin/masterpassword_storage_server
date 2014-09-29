@@ -21,7 +21,7 @@ class UtilitiesTest extends UnitTestCase {
         $this->privateKey = getPrivateKey();
 
         deleteUser( $this->mysql, $this->username );
-        insertUser($this->mysql, $this->username, 
+        insertUser($this->mysql, $this->username, $this->password,
                 $this->verificationKey, $this->email);
         validateUser($this->mysql, $this->username, $this->password );
         

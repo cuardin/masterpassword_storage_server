@@ -48,7 +48,7 @@ try {
         throw new Exception ( "Anti-spam key did not match" );
     }
     
-    insertUser($mysql, $username, $verificationKey, $email);
+    insertUser($mysql, $username, $password, $verificationKey, $email);
     
     echo "OK";
     
