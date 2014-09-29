@@ -83,7 +83,7 @@ function authenticateUser($mysql, $username, $password) {
     $passwordCrypt = crypt($password, $passwordStored);                  
     
     //Now check the fetched password against the stored
-    if (strcmp($passwordStored, $passwordCrypt)) {        
+    if (strcmp($passwordStored, $passwordCrypt)) {                
         throw new Exception( "Wrong password" );
      }
 

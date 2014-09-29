@@ -68,9 +68,10 @@ class UserManagementCoreTest extends UnitTestCase {
         //Create a user to delete
         insertUser($this->mysql, $this->username, $this->password,
                $this->verificationKey, $this->email);
-        
+     
+       
         //And validate user emial, otherwise we canot authenticate.        
-        validateUser( $this->mysql, $this->username, $this->password, $this->password );
+        validateUser( $this->mysql, $this->username );
         
         $this->expectException();
         deleteUserWithKey( $this->mysql, $this->username, "", "" );
@@ -82,7 +83,7 @@ class UserManagementCoreTest extends UnitTestCase {
         insertUser($this->mysql, $this->username, $this->password,
                $this->verificationKey, $this->email);        
         
-        validateUser( $this->mysql, $this->username, $this->password, $this->password );
+        validateUser( $this->mysql, $this->username );
                 
         $this->assertEqual( "0", getOneValueFromUserList($this->mysql, 
                 "verificationKey", $this->username) );             
@@ -96,7 +97,7 @@ class UserManagementCoreTest extends UnitTestCase {
         $verificationKey = getOneValueFromUserList($this->mysql, 
                 "verificationKey", $this->username);
         
-        validateUserWithKey( $this->mysql, $this->username, $this->password, $verificationKey );
+        validateUserWithKey( $this->mysql, $this->username, $verificationKey );
                 
         $this->assertEqual( "0", getOneValueFromUserList($this->mysql, 
                 "verificationKey", $this->username) );             

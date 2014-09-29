@@ -29,13 +29,12 @@ class UserManagementTest extends WebTestCase {
     }
     
     public function tearDown() {        
-        deleteUser( $this->mysql, $this->username );
+        //deleteUser( $this->mysql, $this->username );
     }
-
+    
     function testCreateUserSimple() {        
         $this->get( getBaseURL() . "/createUser.php?" .
-                "username=$this->username&password1=$this->password&" .
-                "password2=$this->password&" .
+                "username=$this->username&password=$this->password&" .                
                 "email=$this->email&userCreationKey=$this->userCreationKey&" .
                 "test=true&privateKey=" . getPrivateKey() );        
         $this->assertText("OK");                 
@@ -130,9 +129,12 @@ class UserManagementTest extends WebTestCase {
 
     }
     
+      
+     
     function testCreateAndAuthenticateUser() {
         $this->get(getBaseURL() . "createUser.php?" .
                 "username=$this->username&email=test@armyr.se&".
+                "password=$this->password&".
                 "userCreationKey=" . getUserCreationKey() .
                 "&test=true&privateKey=" . getPrivateKey() );        
         $this->assertText('OK');
@@ -141,17 +143,18 @@ class UserManagementTest extends WebTestCase {
         
         $this->assertEqual($this->username, 
                 getOneValueFromUserList($this->mysql, "username", $this->username));
-        
+
         $this->get(getBaseURL() . "verifyEmail.php?" .
-                "username=$this->username&password=$this->password&".
+                "username=$this->username&".
                 "privateKey=" . getPrivateKey() );        
         $this->assertText('OK');
-                        
+                                        
         $this->get(getBaseURL() . "authenticateUser.php?" .
                 "username=$this->username&password=$this->password" );                
         $this->assertText('OK');
+                
     }
-
+    
     function testEradicateUserSimple() {                
         insertUser($this->mysql, $this->username, $this->password,
                $this->verificationKey, $this->email);                
@@ -187,6 +190,8 @@ class UserManagementTest extends WebTestCase {
                 "privateKey=--");                
         $this->assertText( 'FAIL' );                 
     }
+     
+     
 }
 
 

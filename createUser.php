@@ -16,12 +16,12 @@ try {
     //Escape all the user input to be SQL safe.
     $username = getParameter($mysql, "username");
     $email = getParameter($mysql, "email");
+    $password = getParameter($mysql, "password");
     
     $mailer = new Mailer();
     try {
         $isTest = getParameter($mysql, "test");
-        $privateKey = getParameter($mysql, "privateKey");
-        if ( !strcmp($isTest, 'true') && !strcmp($privateKey,  getPrivateKey() )) {
+        if ( !strcmp($isTest, 'true') ) {
             $mailer = new MailerStub();
         }
     } catch ( Exception $e ) {

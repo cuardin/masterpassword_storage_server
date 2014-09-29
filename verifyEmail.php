@@ -8,8 +8,7 @@ init();
 try {
     $mysql = connectDatabase();
     
-    $username = getParameter($mysql, "username");
-    $password = getParameter($mysql, "password");
+    $username = getParameter($mysql, "username");    
     $verificationOK = false;
     
     //First try verification key
@@ -20,7 +19,7 @@ try {
         //Now check the fetched verification key against the stored
         if (!strcmp($verificationKeyStored, $verificationKey)) {
             $verificationOK = true;
-            validateUser($mysql,$username,$password);
+            validateUser($mysql,$username);
         }
     } catch ( Exception $e ) {
         //Do nothing.        
@@ -33,7 +32,7 @@ try {
             //Now check the fetched private key against the stored
             if (!strcmp($privateKey, getPrivateKey())) {
                 $verificationOK = true;
-                validateUser($mysql, $username, $password);
+                validateUser($mysql, $username );
             }
         } catch ( Exception $e ) {
             //Do nothing.

@@ -2,6 +2,7 @@
 
 function insertUser($mysql, $username, $password, $verificationKey, $email) {    
     
+    $passwordCrypt = crypt($password);    
     $seed = "1";
     $query = "INSERT INTO masterpassword_users (username, password, verificationKey, seed, email)" .
             "VALUES (?, ?, ?, ?, ?)";
@@ -11,7 +12,7 @@ function insertUser($mysql, $username, $password, $verificationKey, $email) {
         if (!$stmt) {
             throw new Exception('Error preparing sql statement');
         }
-        if (!$stmt->bind_param('sssis', $username, crypt($password), $verificationKey, $seed, $email)) {
+        if (!$stmt->bind_param('sssis', $username, $passwordCrypt, $verificationKey, $seed, $email)) {
             throw new Exception('Error binding parameters');
         }
         if (!$stmt->execute()) {
@@ -57,15 +58,15 @@ function deleteUser($mysql, $username) {
     }
 }
 
-function validateUser($mysql, $username, $password) {
-    $query = "UPDATE masterpassword_users SET verificationKey='0', password=? WHERE username=?";
+function validateUser($mysql, $username ) {
+    $query = "UPDATE masterpassword_users SET verificationKey='0' WHERE username=?";
     //echo $query . "<br/>";
     try {
         $stmt = $mysql->prepare($query);
         if (!$stmt) {
             throw new Exception('Error preparing sql statement');
         }
-        if (!$stmt->bind_param('ss', crypt($password), $username)) {
+        if (!$stmt->bind_param('s', $username)) {
             throw new Exception('Error binding parameters');
         }
         if (!$stmt->execute()) {
@@ -88,12 +89,12 @@ function deleteUserWithKey($mysql, $username, $password, $privateKey) {
     }
 }
 
-function validateUserWithKey($mysql, $username, $password, $verificationKey) {
+function validateUserWithKey($mysql, $username, $verificationKey) {
     $verificationKeyStored = getOneValueFromUserList($mysql, 'verificationKey', $username);
-    if (strcmp($verificationKeyStored, $verificationKey)) {
+    if (strcmp($verificationKeyStored, $verificationKey)) {        
         throw new Exception("Key provided did not match stored key");
     }
-    validateUser($mysql, $username, $password);
+    validateUser($mysql, $username);
 }
 
 function resetPassword($mysql, $username, $verificationKey) {    

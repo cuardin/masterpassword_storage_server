@@ -11,7 +11,7 @@ try {
     authenticateUser($mysql, $username, $password);    
     echo "OK";
     
-} catch ( Exception $e) {
+} catch ( Exception $e) {    
     echo "FAIL: " . $e->getMessage();
 }
 
