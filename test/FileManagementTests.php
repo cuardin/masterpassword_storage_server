@@ -160,20 +160,19 @@ class FileManagementTests extends WebTestCase {
     
     public function testListFilesSimple() {        
         //Create an additional file
-        $fileID01 = insertFile($this->mysql, $this->username, 
-                "testListFilesSimple01Name", "testListFilesSimple01Content");        
-        $fileID02 = insertFile($this->mysql, $this->username, 
-                "testListFilesSimple02Name", "testListFilesSimple02Content");        
-        
-       
+        insertFile($this->mysql, $this->username, 
+                "testListFilesSimple01NameÅÄÖ", "testListFilesSimple01ContentÅÄÖ");        
+        insertFile($this->mysql, $this->username, 
+                "testListFilesSimple02NameÅÄÖ", "testListFilesSimple02ContentÅÄÖ");        
+               
         $this->get(getBaseURL() . "listFiles.php?" .
                 "username=$this->username&password=$this->password");                        
         
         $this->assertMime("application/json");                
-        $this->assertText("testListFilesSimple01Name");
-        $this->assertText("testListFilesSimple02Name");        
-        $this->assertText("testListFilesSimple01Content");
-        $this->assertText("testListFilesSimple02Content");        
+        $this->assertText(json_encode("testListFilesSimple01NameÅÄÖ"));
+        $this->assertText(json_encode("testListFilesSimple02NameÅÄÖ"));  
+        $this->assertText(json_encode("testListFilesSimple01ContentÅÄÖ"));
+        $this->assertText(json_encode("testListFilesSimple02ContentÅÄÖ"));        
     }
     
     public function testListFilesWrongPassword() {        
