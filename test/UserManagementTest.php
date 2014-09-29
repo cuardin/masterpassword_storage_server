@@ -162,8 +162,7 @@ class UserManagementTest extends WebTestCase {
                 $this->password );
         
         $this->get( getBaseURL() . "eradicateUser.php?" .
-                "username=$this->username&password=$this->password&" .
-                "privateKey=--");                
+                "username=$this->username&password=$this->password");                
         $this->assertText( 'OK');                 
     }
 

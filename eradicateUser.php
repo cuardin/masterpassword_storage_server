@@ -10,8 +10,7 @@ try {
     $mysql = connectDatabase();
 
     $username = getParameter($mysql, "username");
-    $password = getParameter($mysql, "password");
-    $privateKey = getParameter($mysql, "privateKey");
+    $password = getParameter($mysql, "password");    
     
     $authOK = false;
     if ( !authenticateUser($mysql, $username, $password)) {                
@@ -21,6 +20,7 @@ try {
     }
     
     if ( !$authOK ) {
+        $privateKey = getParameter($mysql, "privateKey");
         if ( strcmp( $privateKey, getPrivateKey() )) {
             throw new Exception ( "Extended authentication failed." );
         } 
