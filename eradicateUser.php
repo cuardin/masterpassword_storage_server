@@ -20,7 +20,7 @@ try {
         $authOK = true;
     }
     
-    if ( !authOK ) {
+    if ( !$authOK ) {
         if ( strcmp( $privateKey, getPrivateKey() )) {
             throw new Exception ( "Extended authentication failed." );
         } 

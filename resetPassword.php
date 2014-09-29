@@ -42,7 +42,7 @@ try {
     $headers = "From:" . $from;
     
     echo "OK"; 
-    $mailer->sendEmail($email, $subject, $message, $from);
+    $mailer->sendEmail($to, $subject, $message, $from);
 
     
 } catch (Exception $e) {
