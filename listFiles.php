@@ -2,9 +2,10 @@
 
 require_once ('./core/utilities.php');
 
+init();
+header('Content-Type: application/json');
 
-
-try {
+try {    
     $mysql = connectDatabase();
 
     $username = getParameter($mysql, "username");
@@ -12,37 +13,38 @@ try {
 
     //Check that credentials are good.
     if (authenticateUser($mysql, $username, $password)) {
+        
         //And list the files
-        $stmt = $mysql->prepare("SELECT * FROM masterpassword_files WHERE username=?");
+        $stmt = $mysql->prepare("SELECT fileName,fileContents FROM masterpassword_files WHERE username=?");
         if ( !$stmt ) {
-            throw new Exception ();
+            throw new Exception ("Error preparing statement");
         }
         
         if ( !$stmt->bind_param('s', $username) ) {
-            throw new Exception();
+            throw new Exception("Error binding variables");
         }
+        
         if ( !$stmt->execute() ) {
-            throw new Exception();
+            throw new Exception("Error executing statement");
         }
-        $res = $stmt->get_result();
-        if (!$res) {
-            throw new Exception();
+        
+        if ( !$stmt->store_result() ) {
+            throw new Exception("Error executing statement");
         }
-
+                                        
+        $stmt->bind_result($fileName, $fileContents );
+        
         $data = array();
 
-        for ($row_no = $res->num_rows - 1; $row_no >= 0; $row_no--) {
-            $res->data_seek($row_no);
-            $row = $res->fetch_assoc();
-            
-            $data[$row['fileName']] = $row['fileContents'];            
+        while ( $stmt->fetch() ) {            
+            $data[$fileName] = $fileContents;            
         }       
         
-        Header('Content-type: application/json');
+        
+                
         print(json_encode($data));
     }
-} catch ( Exception $e )  {
-    mb_http_output('UTF-8');
+} catch ( Exception $e )  {    
     echo "FAIL: " . $e->getMessage();
 }
 ?>

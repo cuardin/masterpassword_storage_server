@@ -167,7 +167,8 @@ class FileManagementTests extends WebTestCase {
         
        
         $this->get(getBaseURL() . "listFiles.php?" .
-                "username=$this->username&password=$this->password");        
+                "username=$this->username&password=$this->password");                        
+        
         $this->assertMime("application/json");                
         $this->assertText("testListFilesSimple01Name");
         $this->assertText("testListFilesSimple02Name");        
