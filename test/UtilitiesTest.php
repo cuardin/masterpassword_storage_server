@@ -35,6 +35,7 @@ class UtilitiesTest extends UnitTestCase {
         deleteUser( $this->mysql, $this->username );
     }
 
+    
     public function testDatabaseConnect() {
         $mysql = connectDatabase();
         $this->assertNotNull( $mysql );        
@@ -56,7 +57,7 @@ class UtilitiesTest extends UnitTestCase {
         $value = getOneValueFromUserList($this->mysql, "username", $this->username);
         $this->assertEqual($value, $this->username);
     }
-        
+       
     public function testGetOneValueFromDataBase() {
         $query = 'SELECT email FROM masterpassword_users WHERE username=?';    
         $email = getOneValueFromDataBase($this->mysql, $query, $this->username);
@@ -103,6 +104,8 @@ class UtilitiesTest extends UnitTestCase {
             $this->pass();
         }
     }
+       
+       
 }
 
 

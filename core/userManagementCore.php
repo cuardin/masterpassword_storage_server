@@ -1,6 +1,17 @@
 <?php
 
 function insertUser($mysql, $username, $password, $verificationKey, $email) {    
+    //TODO: This entire function has to be an atomic operation.
+    
+    //Check if someone exists with the same email.
+    if ( getUserNameFromEmail($mysql, $email) != null ) {
+        return 0;
+    }    
+    
+    //Check if someone exists with the same user name
+    if ( getOneValueFromUserList($mysql, "username", $username) != null ) {
+        return 0;
+    }
     
     $passwordCrypt = crypt($password);    
     $seed = "1";
@@ -21,16 +32,10 @@ function insertUser($mysql, $username, $password, $verificationKey, $email) {
         if (!$stmt->close()) {
             throw new Exception('Error closing statement');
         }
-
-        /*if (!autoExtendLicense($mysql, $email, 'NEW')) {
-            //echo "Extending license. <br/>";
-            throw new Exception("Error extending license");
-        }*/
-        
+       
         return mysqli_insert_id($mysql);        
         
-    } catch (Exception $e) {
-        //echo $e->getMessage() . "<br/>";
+    } catch (Exception $e) {        
         throw new Exception(htmlspecialchars($mysql->error));
     }
 }
