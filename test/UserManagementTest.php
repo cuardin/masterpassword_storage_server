@@ -61,6 +61,7 @@ class UserManagementTest extends WebTestCase {
                 "test=true&privateKey=" . getPrivateKey() );        
         $this->assertText( "FAIL" );                         
         $this->assertText( "duplicate" );                 
+        $this->assertNoText("Press this link");
         
         //Act: Same email different username
         $this->get( getBaseURL() . "/createUser.php?" .
@@ -68,7 +69,8 @@ class UserManagementTest extends WebTestCase {
                 "email=$this->email&userCreationKey=$this->userCreationKey&" .
                 "test=true&privateKey=" . getPrivateKey() );        
         $this->assertText( "FAIL" );                         
-        $this->assertText( "duplicate" );                 
+        $this->assertText( "duplicate" );   
+        $this->assertNoText("Press this link");
     }
     
     function testCreateUserBadPrivateKey() {        

@@ -46,6 +46,7 @@ try {
     $id = insertUser($mysql, $username, $password, $verificationKey, $email);
     if ( $id == 0 ) {
         echo "FAIL: duplicate user";
+        return;
     } else {    
         echo "OK";
     }
