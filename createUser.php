@@ -26,12 +26,7 @@ try {
         }
     } catch ( Exception $e ) {
         
-    }
-    
-    $userNameStored = getOneValueFromUserList($mysql, 'username', $username);
-    if (!($userNameStored == null)) {
-        throw new Exception('User name allready exists: ' . $userNameStored);
-    }
+    }        
         
     //Check if we have a recaptcha a user creation key
     $isHuman = false;
@@ -48,9 +43,12 @@ try {
         throw new Exception ( "Anti-spam key did not match" );
     }
     
-    insertUser($mysql, $username, $password, $verificationKey, $email);
-    
-    echo "OK";
+    $id = insertUser($mysql, $username, $password, $verificationKey, $email);
+    if ( $id == 0 ) {
+        echo "FAIL: duplicate user";
+    } else {    
+        echo "OK";
+    }
     
     //Now send an email    
     $subject = "Verification email";

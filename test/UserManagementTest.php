@@ -11,8 +11,10 @@ class UserManagementTest extends WebTestCase {
         
     private $mysql = null;
     private $username = "testUser";
+    private $username2 = "testUser2";
     private $password = "testPassword";    
     private $email = "test@armyr.se";
+    private $email2 = "test2@armyr.se";
     private $verificationKey = "testKey";
     private $privateKey = null;
     private $userCreationKey = null;
@@ -29,7 +31,8 @@ class UserManagementTest extends WebTestCase {
     }
     
     public function tearDown() {        
-        //deleteUser( $this->mysql, $this->username );
+        deleteUser( $this->mysql, $this->username );
+        deleteUser( $this->mysql, $this->username2 );
     }
     
     function testCreateUserSimple() {        
@@ -43,6 +46,29 @@ class UserManagementTest extends WebTestCase {
             "http://masterpassword.armyr.se/php_scripts/verifyEmail.php?username=" .
             $this->username );
         $this->assertText("create_new_user_masterpassword@armyr.se" );                 
+    }
+    
+    function testCreateDuplicateUser() {        
+        //Arrange
+        $id = insertUser($this->mysql, $this->username, 
+                $this->password, $this->verificationKey, $this->email);
+        $this->assertNotEqual($id, 0);
+        
+        //Act: Same username different email
+        $this->get( getBaseURL() . "/createUser.php?" .
+                "username=$this->username&password=$this->password&" .                
+                "email=$this->email2&userCreationKey=$this->userCreationKey&" .
+                "test=true&privateKey=" . getPrivateKey() );        
+        $this->assertText( "FAIL" );                         
+        $this->assertText( "duplicate" );                 
+        
+        //Act: Same email different username
+        $this->get( getBaseURL() . "/createUser.php?" .
+                "username=$this->username2&password=$this->password&" .                
+                "email=$this->email&userCreationKey=$this->userCreationKey&" .
+                "test=true&privateKey=" . getPrivateKey() );        
+        $this->assertText( "FAIL" );                         
+        $this->assertText( "duplicate" );                 
     }
     
     function testCreateUserBadPrivateKey() {        
