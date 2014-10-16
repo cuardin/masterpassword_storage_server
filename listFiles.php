@@ -38,8 +38,7 @@ try {
 
         while ( $stmt->fetch() ) {            
             $data[$fileName] = $fileContents;            
-        }       
-        
+        }               
         
                 
         print(json_encode($data));

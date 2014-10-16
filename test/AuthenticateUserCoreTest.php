@@ -40,7 +40,7 @@ class authenticateUserCoreTest extends UnitTestCase {
                 $this->password);
             $this->fail( "No exception cought");
         } catch ( Exception $e ) {
-            $this->assertEqual( "User not validated", $e->getMessage() );
+            $this->assertEqual( "UNVALIDATED_USER", $e->getMessage() );
         }        
     }
     
@@ -51,7 +51,7 @@ class authenticateUserCoreTest extends UnitTestCase {
                 $this->password);
             $this->fail( "No exception cought");
         } catch ( Exception $e ) {
-            $this->assertEqual( "Unknown user name: n/a", $e->getMessage() );
+            $this->assertEqual( "BAD_LOGIN", $e->getMessage() );
         }        
     }
 
@@ -62,10 +62,46 @@ class authenticateUserCoreTest extends UnitTestCase {
                 "N/A");
             $this->fail( "No exception cought");
         } catch ( Exception $e ) {
-            $this->assertEqual( "Wrong password", $e->getMessage() );
+            $this->assertEqual( "BAD_LOGIN", $e->getMessage() );
         }        
     }   
     
+    public function testAuthenticateUserUnvalidated() {
+        
+        //De-authenticate user.
+        $query = "UPDATE masterpassword_users SET verificationKey='ABC' WHERE username=?";        
+        
+        try {
+            $stmt = $this->mysql->prepare($query);
+            if (!$stmt) {
+                throw new Exception('Error preparing sql statement');
+            }
+            if (!$stmt->bind_param('s', $this->username)) {
+                throw new Exception('Error binding parameters');
+            }
+            if (!$stmt->execute()) {
+                throw new Exception('Error executing statement');
+            }
+            if (!$stmt->close()) {
+                throw new Exception('Error closing statement');
+            }
+        } catch (Exception $e) {            
+            throw new Exception(htmlspecialchars($this->mysql->error));
+        }
+        
+        //First try with bad password
+        try { 
+            authenticateUser($this->mysql, $this->username, "--");
+        } catch ( Exception $e ) {
+            $this->assertEqual( $e->getMessage(), "BAD_LOGIN" );
+        }
+        
+        try { 
+            authenticateUser($this->mysql, $this->username, $this->password);
+        } catch ( Exception $e ) {
+            $this->assertEqual( $e->getMessage(), "UNVALIDATED_USER" );
+        }
+    }
 
 }
 

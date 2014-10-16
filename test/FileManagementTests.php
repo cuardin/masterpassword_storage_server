@@ -182,11 +182,19 @@ class FileManagementTests extends WebTestCase {
        
         $this->get(getBaseURL() . "listFiles.php?" .
                 "username=$this->username&password=--");        
-        $this->assertText("FAIL");                
+        $this->assertText("FAIL: BAD_LOGIN");                
         $this->assertNoText("testListFilesSimple01Name");        
         $this->assertNoText("$fileID01");        
     }
-
+    
+    public function testListFilesWrongUserName() {        
+        //Create an additional file
+        
+        $this->get(getBaseURL() . "listFiles.php?" .
+                "username=--&password=$this->password");        
+        $this->assertText("FAIL: BAD_LOGIN");                        
+    }
+        
     public function testOverwriteFileSimple() {        
         //Create an additional file
         $fileID = insertFile($this->mysql, $this->username, 

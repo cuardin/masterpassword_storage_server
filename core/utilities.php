@@ -66,15 +66,9 @@ function authenticateUser($mysql, $username, $password) {
     //be leaked, but I do not care.
     $usernameStored = getOneValueFromUserList($mysql, "username", $username);
     if ( strcmp( $username, $usernameStored) ) {
-        throw new Exception ( "Unknown user name: " . $username );
+        throw new Exception ( "BAD_LOGIN" );
     }
     
-    //Second check that the email has been verified.
-    $verificationKey = getOneValueFromUserList($mysql, "verificationKey", $username);
-    if (strcmp($verificationKey, '0')) {
-        throw new Exception ( "User not validated" );        
-    }
-
     //Then get the password. This setup allows a hacker to do a timing attach 
     //and find the list of usernames in the database. Ignoring that for now.
     $passwordStored = getOneValueFromUserList($mysql, "password", $username);  
@@ -84,8 +78,14 @@ function authenticateUser($mysql, $username, $password) {
     
     //Now check the fetched password against the stored
     if (strcmp($passwordStored, $passwordCrypt)) {                
-        throw new Exception( "Wrong password" );
+        throw new Exception( "BAD_LOGIN" );
      }
+
+    //Last, check that the email has been verified.
+    $verificationKey = getOneValueFromUserList($mysql, "verificationKey", $username);
+    if (strcmp($verificationKey, '0')) {
+        throw new Exception ( "UNVALIDATED_USER" );        
+    }
 
      return true;
 }

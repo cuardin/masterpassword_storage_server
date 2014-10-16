@@ -44,13 +44,13 @@ class AuthenticateUserTest extends WebTestCase {
     function testAuthenticateBadUserName() {
         $this->get(getBaseURL() . "authenticateUser.php?" .
                 "username=--&password=$this->password" );        
-        $this->assertText('FAIL');                 
+        $this->assertText('FAIL: BAD_LOGIN');                 
     }
 
     function testAuthenticateBadPassword() {
         $this->get(getBaseURL() . "authenticateUser.php?" .
                 "username=$this->username&password=--" );        
-        $this->assertText('FAIL');                 
+        $this->assertText('FAIL: BAD_LOGIN');                 
     }        
     
 }
