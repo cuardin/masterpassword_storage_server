@@ -38,6 +38,19 @@ try {
     } catch (Exception $e) {
         //Do nothing.
     }
+    if ( !$isHuman ) {
+        $challenge = getParameter($mysql, "recaptcha_challenge_field");
+        $response = getParameter($mysql, "recaptcha_response_field");
+
+        $privateCAPTHCAkey = "6Ldtm_wSAAAAAF7Jw0B0QF6JQZWdEtNr0LWUFSp0";
+        $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
+
+        if (!$resp->is_valid) {
+            throw new Exception("The reCAPTCHA wasn't entered correctly:" . $resp->error);
+        } else {
+            $isHuman = true;
+        }    
+    }
 
     if ( !$isHuman ) {
         throw new Exception ( "Anti-spam key did not match" );
