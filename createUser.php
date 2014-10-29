@@ -9,14 +9,14 @@ require_once ( './test/MailerStub.php' );
 init();
 
 try {
-    $mysql = connectDatabase();
-
-    $verificationKey = rand_string(32);
+    $mysql = connectDatabase();    
 
     //Escape all the user input to be SQL safe.
     $username = getParameter($mysql, "username");
     $email = getParameter($mysql, "email");
     $password = getParameter($mysql, "password");
+    
+    echo "OK<br/>";
     
     $mailer = new Mailer();
     try {
@@ -27,7 +27,9 @@ try {
     } catch ( Exception $e ) {
         
     }        
-        
+    
+    echo "OK2<br/>";
+    
     //Check if we have a recaptcha a user creation key
     $isHuman = false;
     try {
@@ -38,31 +40,37 @@ try {
     } catch (Exception $e) {
         //Do nothing.
     }
+    
+    echo "OK3<br/>";
+    
     if ( !$isHuman ) {
         $challenge = getParameter($mysql, "recaptcha_challenge_field");
         $response = getParameter($mysql, "recaptcha_response_field");
-
-        $privateCAPTHCAkey = "6Ldtm_wSAAAAAF7Jw0B0QF6JQZWdEtNr0LWUFSp0";
+        echo "OK3.1<br/>";
+        
+        $privateCAPTHCAkey = getPrivateRecapchaKey();
+        echo "OK3.2<br/>";
         $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
-
+        echo "OK3.3<br/>";
         if (!$resp->is_valid) {
-            throw new Exception("The reCAPTCHA wasn't entered correctly:" . $resp->error);
+            echo "INVALID_CAPTCHA";
+            return;
         } else {
             $isHuman = true;
         }    
-    }
-
-    if ( !$isHuman ) {
-        throw new Exception ( "Anti-spam key did not match" );
-    }
+    }   
     
-    $id = insertUser($mysql, $username, $password, $verificationKey, $email);
+    echo "OK4<br/>";
+    
+    $id = insertUser($mysql, $username, $password, $email);
     if ( $id == 0 ) {
         echo "DUPLICATE_USER";
         return;
     } else {    
         echo "OK";
     }
+    
+    echo "OK5<br/>";
     
     //Now send an email    
     $subject = "Verification email";

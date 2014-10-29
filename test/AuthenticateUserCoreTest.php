@@ -35,13 +35,12 @@ class authenticateUserCoreTest extends UnitTestCase {
     }   
    
     public function testAuthenticateUserNotValidated() {
-        try {
-            authenticateUser($this->mysql, $this->username, 
-                $this->password);
-            $this->fail( "No exception cought");
-        } catch ( Exception $e ) {
-            $this->assertEqual( "UNVALIDATED_USER", $e->getMessage() );
-        }        
+        resetPassword( $this->mysql, $this->username, $this->verificationKey );
+       
+        $bOK = authenticateUser($this->mysql, $this->username, 
+                $this->password);        
+        $this->assertTrue( $bOK );
+                 
     }
     
     public function testAuthenticateUserWrongUsername() {

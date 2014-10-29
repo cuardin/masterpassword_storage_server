@@ -77,12 +77,6 @@ function authenticateUser($mysql, $username, $password) {
         throw new Exception( "BAD_LOGIN" );
      }
 
-    //Last, check that the email has been verified.
-    $verificationKey = getOneValueFromUserList($mysql, "verificationKey", $username);
-    if (strcmp($verificationKey, '0')) {
-        throw new Exception ( "UNVALIDATED_USER" );        
-    }
-
      return true;
 }
 

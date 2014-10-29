@@ -31,8 +31,8 @@ class UserManagementTest extends WebTestCase {
     }
     
     public function tearDown() {        
-        deleteUser( $this->mysql, $this->username );
-        deleteUser( $this->mysql, $this->username2 );
+        //deleteUser( $this->mysql, $this->username );
+        //deleteUser( $this->mysql, $this->username2 );
     }
     
     function testCreateUserSimple() {        
@@ -51,14 +51,14 @@ class UserManagementTest extends WebTestCase {
     function testCreateDuplicateUser() {        
         //Arrange
         $id = insertUser($this->mysql, $this->username, 
-                $this->password, $this->verificationKey, $this->email);
-        $this->assertNotEqual($id, 0);
+                $this->password,  $this->email);
+        $this->assertNotEqual($id, 0);        
         
         //Act: Same username different email
         $this->get( getBaseURL() . "/createUser.php?" .
                 "username=$this->username&password=$this->password&" .                
                 "email=$this->email2&userCreationKey=$this->userCreationKey&" .
-                "test=true&privateKey=" . getPrivateKey() );                
+                "test=true" );                
         $this->assertText( "DUPLICATE_USER" );                 
         $this->assertNoText("Press this link");
         
@@ -66,7 +66,7 @@ class UserManagementTest extends WebTestCase {
         $this->get( getBaseURL() . "/createUser.php?" .
                 "username=$this->username2&password=$this->password&" .                
                 "email=$this->email&userCreationKey=$this->userCreationKey&" .
-                "test=true&privateKey=" . getPrivateKey() );        
+                "test=true" );        
         $this->assertText( "DUPLICATE_USER" );                 
         $this->assertNoText("Press this link");
     }
@@ -96,7 +96,8 @@ class UserManagementTest extends WebTestCase {
     
     function testVerifyUserSimple() {        
         insertUser($this->mysql, $this->username, $this->password, 
-                $this->verificationKey, $this->email);
+                $this->email);
+        resetPassword( $this->mysql, $this->username, $this->verificationKey );
         
         $this->get(getBaseURL() . "verifyEmail.php?" .
                 "username=$this->username&" .
@@ -107,7 +108,8 @@ class UserManagementTest extends WebTestCase {
     
     function testVerifyUserPrivateKey() {        
         insertUser($this->mysql, $this->username, $this->password,
-                $this->verificationKey, $this->email);
+                $this->email);
+        resetPassword( $this->mysql, $this->username, $this->verificationKey );
         
         $this->get(getBaseURL() . "verifyEmail.php?" .
                 "username=$this->username&" .
@@ -118,7 +120,8 @@ class UserManagementTest extends WebTestCase {
     
     function testVerifyUserBadKey() {        
         insertUser($this->mysql, $this->username, $this->password,
-                $this->verificationKey, $this->email);
+                $this->email);
+        resetPassword( $this->mysql, $this->username, $this->verificationKey );
         
         $this->get(getBaseURL() . "verifyEmail.php?" .
                 "username=$this->username&" .
@@ -129,9 +132,8 @@ class UserManagementTest extends WebTestCase {
     function testResetPasswordSimple() {
         //Create a user to edit.
         insertUser($this->mysql, $this->username, $this->password,
-               $this->verificationKey, $this->email);        
+               $this->email);        
         
-        validateUser( $this->mysql, $this->username, $this->password );
         $passwordInDB = getOneValueFromUserList($this->mysql, "password", $this->username);        
         $keyInDB = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);                        
         $this->assertEqual("0", $keyInDB);

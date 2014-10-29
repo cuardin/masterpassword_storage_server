@@ -1,6 +1,6 @@
 <?php
 
-function insertUser($mysql, $username, $password, $verificationKey, $email) {    
+function insertUser($mysql, $username, $password, $email) {    
     //TODO: This entire function has to be an atomic operation.
     
     //Check if someone exists with the same email.
@@ -15,15 +15,15 @@ function insertUser($mysql, $username, $password, $verificationKey, $email) {
     
     $passwordCrypt = crypt($password);    
     $seed = "1";
-    $query = "INSERT INTO masterpassword_users (username, password, verificationKey, seed, email)" .
-            "VALUES (?, ?, ?, ?, ?)";
+    $query = "INSERT INTO masterpassword_users (username, password, seed, email)" .
+            "VALUES (?, ?, ?, ?)";
 
     try {
         $stmt = $mysql->prepare($query);
         if (!$stmt) {
             throw new Exception('Error preparing sql statement');
         }
-        if (!$stmt->bind_param('sssis', $username, $passwordCrypt, $verificationKey, $seed, $email)) {
+        if (!$stmt->bind_param('ssis', $username, $passwordCrypt, $seed, $email)) {
             throw new Exception('Error binding parameters');
         }
         if (!$stmt->execute()) {
