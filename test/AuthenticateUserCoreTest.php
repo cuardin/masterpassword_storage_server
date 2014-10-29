@@ -23,7 +23,7 @@ class authenticateUserCoreTest extends UnitTestCase {
     }
     
     public function tearDown() {        
-        deleteUser( $this->mysql, $this->username );
+        //deleteUser( $this->mysql, $this->username );
     }
     
     public function testAuthenticateUserSimple() {
@@ -32,8 +32,8 @@ class authenticateUserCoreTest extends UnitTestCase {
         
         $this->assertTrue( authenticateUser($this->mysql, $this->username, 
                 $this->password) );
-    }
-    
+    }   
+   
     public function testAuthenticateUserNotValidated() {
         try {
             authenticateUser($this->mysql, $this->username, 
@@ -102,7 +102,6 @@ class authenticateUserCoreTest extends UnitTestCase {
             $this->assertEqual( $e->getMessage(), "UNVALIDATED_USER" );
         }
     }
-
 }
 
 ?>

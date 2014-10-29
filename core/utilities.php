@@ -55,10 +55,6 @@ function getCAPTHCAKey() {
     return getOneValueFromDataBase($mysql, $query, 'captchaKey');    
 }
 
-function getBaseURL() {
-    return "http://192.168.56.101/php_scripts/";
-}
-
 function authenticateUser($mysql, $username, $password) {
 
     //First check if the user name exists
@@ -74,7 +70,7 @@ function authenticateUser($mysql, $username, $password) {
     $passwordStored = getOneValueFromUserList($mysql, "password", $username);  
     
     //Hash the password, using the salt stored
-    $passwordCrypt = crypt($password, $passwordStored);                  
+    $passwordCrypt = crypt($password, $passwordStored);                         
     
     //Now check the fetched password against the stored
     if (strcmp($passwordStored, $passwordCrypt)) {                

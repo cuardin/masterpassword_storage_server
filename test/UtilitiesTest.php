@@ -5,7 +5,7 @@ require_once('../core/fileManagementCore.php');
 require_once('../core/userManagementCore.php');
 
 class UtilitiesTest extends UnitTestCase {
-    
+       
     private $mysql = null;
     private $username = "testUser";
     private $password = "testPassword";
@@ -104,7 +104,7 @@ class UtilitiesTest extends UnitTestCase {
             $this->pass();
         }
     }
-       
+     
        
 }
 
