@@ -48,7 +48,7 @@ try {
         $response = getParameter($mysql, "recaptcha_response_field");
         echo "OK3.1<br/>";
         
-        $privateCAPTHCAkey = getPrivateRecapchaKey();
+        $privateCAPTHCAkey = getCAPCHAPrivateKey();
         echo "OK3.2<br/>";
         $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
         echo "OK3.3<br/>";

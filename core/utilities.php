@@ -48,13 +48,6 @@ function getUserCreationKey() {
     return getOneValueFromDataBase($mysql, $query, 'userCreationKey');    
 }
 
-
-function getCAPTHCAKey() {    
-    $mysql = connectDatabase();
-    $query = 'SELECT paramValue FROM masterpassword_parameters WHERE paramName=?';    
-    return getOneValueFromDataBase($mysql, $query, 'captchaKey');    
-}
-
 function authenticateUser($mysql, $username, $password) {
 
     //First check if the user name exists
