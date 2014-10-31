@@ -39,8 +39,8 @@ try {
     
     
     if ( !$isHuman ) {
-        $challenge = getParameter($mysql, "recaptcha_challenge_field");
-        $response = getParameter($mysql, "recaptcha_response_field");        
+        $challenge = getParameter($mysql, "recapcha_challenge_field");
+        $response = getParameter($mysql, "recapcha_response_field");        
         
         $privateCAPTHCAkey = getCAPCHAPrivateKey();        
         $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);        
