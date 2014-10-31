@@ -29,10 +29,10 @@ class UserManagementTest extends WebTestCase {
     }
     
     public function tearDown() {        
-        //deleteUser( $this->mysql, $this->username );
-        //deleteUser( $this->mysql, $this->username2 );
+        deleteUser( $this->mysql, $this->username );
+        deleteUser( $this->mysql, $this->username2 );
     }
-    /*
+    
     function testCreateUserSimple() {        
         $this->get( getBaseURL() . "/createUser.php?" .
                 "username=$this->username&password=$this->password&" .                
@@ -126,7 +126,7 @@ class UserManagementTest extends WebTestCase {
                 "verificationKey=--");        
         $this->assertText('FAIL');                 
     }    
-    */
+    
     function testResetPasswordSimple() {
         //Create a user to edit.
         insertUser($this->mysql, $this->username, $this->password,
@@ -155,7 +155,7 @@ class UserManagementTest extends WebTestCase {
 
     }
     
-    /*
+    
      
     function testCreateAndAuthenticateUser() {
         $this->get(getBaseURL() . "createUser.php?" .
@@ -216,8 +216,5 @@ class UserManagementTest extends WebTestCase {
         $this->assertText( 'FAIL' );                 
     }
      
-     */
+     
 }
-
-
-?>

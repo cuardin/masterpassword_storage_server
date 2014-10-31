@@ -70,8 +70,8 @@ class FileManagementCoreTest extends UnitTestCase {
         $this->assertTrue( $fileID > 0 );
         
         //Check that the user has a total of 2 files.
-        $numberOfFiles = getNumberOfFilesBelongingToUser ( $this->mysql, $this->username );
-        $this->assertEqual( 2, $numberOfFiles );
+        $numberOfFiles2 = getNumberOfFilesBelongingToUser ( $this->mysql, $this->username );
+        $this->assertEqual( 2, $numberOfFiles2 );
         
         //Check that we actually made the file as well.
         $this->assertEqual( "testInsertFileSimple", 
@@ -141,5 +141,3 @@ class FileManagementCoreTest extends UnitTestCase {
 
 }
 
-
-?>

@@ -112,5 +112,3 @@ class UserManagementCoreTest extends UnitTestCase {
         $this->assertEqual($keyInDB, "newKey");
     }    
 }
-
-?>

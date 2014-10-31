@@ -55,5 +55,3 @@ class AuthenticateUserTest extends WebTestCase {
     
 }
 
-
-?>

@@ -14,4 +14,3 @@ class AllTests extends TestSuite {
         $this->addFile('GetSeedTest.php');
     }
 }
-?>

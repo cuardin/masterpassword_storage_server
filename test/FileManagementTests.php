@@ -257,6 +257,3 @@ class FileManagementTests extends WebTestCase {
     }
 
 }
-
-
-?>

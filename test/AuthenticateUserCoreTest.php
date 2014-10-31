@@ -103,4 +103,3 @@ class authenticateUserCoreTest extends UnitTestCase {
     }
 }
 
-?>

@@ -98,14 +98,10 @@ class UtilitiesTest extends UnitTestCase {
         try {
             getParameter($this->mysql,"c");
             $this->fail();
-        } catch ( Exception $e ) {
+        } catch ( Exception $e ) {            
             $this->pass();
         }
     }
      
        
 }
-
-
-
-?>
