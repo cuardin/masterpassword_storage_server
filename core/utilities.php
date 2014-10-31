@@ -36,18 +36,6 @@ function connectDatabase() {
     return $mysql;
 }
 
-function getPrivateKey() {    
-    $mysql = connectDatabase();
-    $query = 'SELECT paramValue FROM masterpassword_parameters WHERE paramName=?';    
-    return getOneValueFromDataBase($mysql, $query, 'privateKey');    
-}
-
-function getUserCreationKey() {    
-    $mysql = connectDatabase();
-    $query = 'SELECT paramValue FROM masterpassword_parameters WHERE paramName=?';    
-    return getOneValueFromDataBase($mysql, $query, 'userCreationKey');    
-}
-
 function authenticateUser($mysql, $username, $password) {
 
     //First check if the user name exists

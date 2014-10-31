@@ -30,7 +30,7 @@ try {
         try {
             $privateKey = getparameter( $mysql, "privateKey" );
             //Now check the fetched private key against the stored
-            if (!strcmp($privateKey, getPrivateKey())) {
+            if (!strcmp($privateKey, getUserEditKey())) {
                 $verificationOK = true;
                 validateUser($mysql, $username );
             }

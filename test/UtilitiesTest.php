@@ -18,7 +18,7 @@ class UtilitiesTest extends UnitTestCase {
     
     public function setUp() {
         $this->mysql = connectDatabase();
-        $this->privateKey = getPrivateKey();
+        $this->privateKey = getUserEditKey();
 
         deleteUser( $this->mysql, $this->username );
         insertUser($this->mysql, $this->username, $this->password,

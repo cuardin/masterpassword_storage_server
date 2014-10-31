@@ -19,7 +19,7 @@ class FileManagementCoreTest extends UnitTestCase {
     
     public function setUp() {
         $this->mysql = connectDatabase();
-        $this->privateKey = getPrivateKey();
+        $this->privateKey = getUserEditKey();
         
         //Clean first.
         deleteAllFilesBelongingToUser($this->mysql, $this->username );            

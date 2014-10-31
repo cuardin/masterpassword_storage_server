@@ -21,7 +21,7 @@ try {
     
     if ( !$authOK ) {
         $privateKey = getParameter($mysql, "privateKey");
-        if ( strcmp( $privateKey, getPrivateKey() )) {
+        if ( strcmp( $privateKey, getUserEditKey() )) {
             throw new Exception ( "Extended authentication failed." );
         } 
     }

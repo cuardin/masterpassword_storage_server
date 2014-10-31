@@ -14,9 +14,7 @@ try {
     //Escape all the user input to be SQL safe.
     $username = getParameter($mysql, "username");
     $email = getParameter($mysql, "email");
-    $password = getParameter($mysql, "password");
-    
-    echo "OK<br/>";
+    $password = getParameter($mysql, "password");        
     
     $mailer = new Mailer();
     try {
@@ -26,41 +24,33 @@ try {
         }
     } catch ( Exception $e ) {
         
-    }        
-    
-    echo "OK2<br/>";
-    
+    }                    
     //Check if we have a recaptcha a user creation key
-    $isHuman = false;
-    try {
-        $privateKeyProvided = getParameter($mysql, "userCreationKey");        
-        if (!strcmp($privateKeyProvided, getUserCreationKey())) {           
-            $isHuman = true;
+    $isHuman = false;        
+    try {             
+        $privateKeyProvided = getParameter($mysql, "userCreationKey");                                        
+        if (!strcmp($privateKeyProvided, getUserEditKey())) {           
+            $isHuman = true;            
+        } else {                        
         }
     } catch (Exception $e) {
-        //Do nothing.
-    }
+        //Do nothing.         
+    }        
     
-    echo "OK3<br/>";
     
     if ( !$isHuman ) {
         $challenge = getParameter($mysql, "recaptcha_challenge_field");
-        $response = getParameter($mysql, "recaptcha_response_field");
-        echo "OK3.1<br/>";
+        $response = getParameter($mysql, "recaptcha_response_field");        
         
-        $privateCAPTHCAkey = getCAPCHAPrivateKey();
-        echo "OK3.2<br/>";
-        $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
-        echo "OK3.3<br/>";
+        $privateCAPTHCAkey = getCAPCHAPrivateKey();        
+        $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);        
         if (!$resp->is_valid) {
             echo "INVALID_CAPTCHA";
             return;
         } else {
             $isHuman = true;
         }    
-    }   
-    
-    echo "OK4<br/>";
+    }          
     
     $id = insertUser($mysql, $username, $password, $email);
     if ( $id == 0 ) {
@@ -68,9 +58,7 @@ try {
         return;
     } else {    
         echo "OK";
-    }
-    
-    echo "OK5<br/>";
+    }    
     
     //Now send an email    
     $subject = "Verification email";

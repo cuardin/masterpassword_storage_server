@@ -18,7 +18,7 @@ class FileManagementTests extends WebTestCase {
     
     public function setUp() {
         $this->mysql = connectDatabase();
-        $this->privateKey = getPrivateKey();
+        $this->privateKey = getUserEditKey();
 
         //Delete any old test users.
         deleteUser( $this->mysql, $this->username );

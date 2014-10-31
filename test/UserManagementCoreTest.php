@@ -17,7 +17,7 @@ class UserManagementCoreTest extends UnitTestCase {
     
     public function setUp() {
         $this->mysql = connectDatabase();
-        $this->privateKey = getPrivateKey();
+        $this->privateKey = getUserEditKey();
 
         deleteUser( $this->mysql, $this->username );
         deleteUser( $this->mysql, $this->username2 );
@@ -80,13 +80,13 @@ class UserManagementCoreTest extends UnitTestCase {
         //Create a user to delete
         insertUser($this->mysql, $this->username, $this->password,
                $this->email);
-        
+                
         deleteUserWithKey( $this->mysql, $this->username, "", $this->privateKey );
         
-                //And check that the user was actually deleted
+        //And check that the user was actually deleted
         $this->assertNull( 
                 getOneValueFromUserList($this->mysql, "username", 
-                        $this->username) );
+                        $this->username) );       
     }
     
     public function testDeleteUserWithWrongPrivateKey() {

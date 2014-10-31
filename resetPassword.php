@@ -16,22 +16,22 @@ try {
     //Escape all the user input to be SQL safe.
     $username = getParameter($mysql, "username");
     $userCreationKey = getParameter($mysql, "userCreationKey");
-
+    
     $mailer = new Mailer();
     try {
         $isTest = getParameter($mysql, "test");
         $privateKey = getParameter($mysql, "privateKey");
-        if ( !strcmp($isTest, 'true') && !strcmp($privateKey,  getPrivateKey() )) {
+        if ( !strcmp($isTest, 'true') && !strcmp($privateKey,  getUserEditKey() )) {
            $mailer = new MailerStub();
         }
     } catch ( Exception $e ) {
         //DO nothing.
-    }
-
-    if (strcmp($userCreationKey, getUserCreationKey())) {
+    }    
+    
+    if (strcmp($userCreationKey, getUserEditKey())) {
         throw new Exception("Incorrect anti-spam key");
     }
-
+    
     resetPassword($mysql, $username, $verificationKey );
     
     //Now send an email
