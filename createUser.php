@@ -28,7 +28,7 @@ try {
     //Check if we have a recaptcha a user creation key
     $isHuman = false;        
     try {             
-        $privateKeyProvided = getParameter($mysql, "userCreationKey");                                        
+        $privateKeyProvided = getParameter($mysql, "userEditKey");                                        
         if (!strcmp($privateKeyProvided, getUserEditKey())) {           
             $isHuman = true;            
         } else {                        

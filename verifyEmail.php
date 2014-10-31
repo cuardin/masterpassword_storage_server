@@ -28,7 +28,7 @@ try {
     if ( !$verificationOK ) {
         //Now try the private key
         try {
-            $privateKey = getparameter( $mysql, "privateKey" );
+            $privateKey = getparameter( $mysql, "userEditKey" );
             //Now check the fetched private key against the stored
             if (!strcmp($privateKey, getUserEditKey())) {
                 $verificationOK = true;

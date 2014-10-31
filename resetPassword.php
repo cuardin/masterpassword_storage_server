@@ -20,7 +20,7 @@ try {
     $mailer = new Mailer();
     try {
         $isTest = getParameter($mysql, "test");
-        $privateKey = getParameter($mysql, "privateKey");
+        $privateKey = getParameter($mysql, "userEditKey");
         if ( !strcmp($isTest, 'true') && !strcmp($privateKey,  getUserEditKey() )) {
            $mailer = new MailerStub();
         }
