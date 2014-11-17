@@ -42,14 +42,22 @@ try {
         $challenge = getParameter($mysql, "recapcha_challenge_field");
         $response = getParameter($mysql, "recapcha_response_field");        
         
-        $privateCAPTHCAkey = getCAPCHAPrivateKey();        
-        $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);        
+        $privateCAPTHCAkey = getCAPCHAPrivateKey();                
+        
+        try {
+            $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);        
+        } catch ( Exception $e ) {
+            echo "reCAPCHA errored: " . $e->getMessage();
+            return;
+        }        
+        
         if (!$resp->is_valid) {
             echo "INVALID_CAPTCHA";
             return;
         } else {
             $isHuman = true;
         }    
+
     }          
     
     $id = insertUser($mysql, $username, $password, $email);
