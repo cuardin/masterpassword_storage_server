@@ -66,18 +66,7 @@ try {
         return;
     } else {    
         echo "OK";
-    }    
-    
-    //Now send an email    
-    $subject = "Verification email";
-    $message = "Hello! Press this link to verify this email address: " .
-            "http://masterpassword.armyr.se/php_scripts/verifyEmail.php?username=" .
-            $username . "&verificationKey=" . $verificationKey;
-    $from = "create_new_user_masterpassword@armyr.se";    
-    
-    
-    $mailer->sendEmail($email, $subject, $message, $from);
-    
+    }            
 
 } catch (Exception $e) {
     echo ( "FAIL: " . $e->getMessage() );
