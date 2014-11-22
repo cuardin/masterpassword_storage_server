@@ -110,14 +110,19 @@ function getDateString() {
 
 
 function getParameter($mysql, $paramName) {
+    
     if ( !array_key_exists($paramName, $_GET) && !array_key_exists($paramName, $_POST)) {
+        error_log( "Input param requested but not found: $paramName" );
+        //die();
         throw new Exception ( "Parameter requested was not provided: " . $paramName);
     }
     $rawValue = $_GET[$paramName];
     if (!strcmp($rawValue, "")) {
         $rawValue = $_POST[$paramName];
     }    
-    return $mysql->real_escape_string($rawValue);
+    $param_val_escaped = $mysql->real_escape_string($rawValue);        
+    
+    return $param_val_escaped;
 }
 
 
