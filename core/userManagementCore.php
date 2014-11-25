@@ -64,7 +64,7 @@ function deleteUser($mysql, $username) {
 }
 
 function validateUser($mysql, $username ) {
-    $query = "UPDATE masterpassword_users SET verificationKey='0' WHERE username=?";
+    $query = "UPDATE masterpassword_users SET verificationKey='0',verificationKeyExpiration=NULL WHERE username=?";
     //echo $query . "<br/>";
     try {
         $stmt = $mysql->prepare($query);
@@ -94,12 +94,23 @@ function deleteUserWithKey($mysql, $username, $password, $privateKey) {
     }
 }
 
-function validateUserWithKey($mysql, $username, $verificationKey) {
+function validateUserWithKey($mysql, $username, $verificationKey, $newPassword) {
     $verificationKeyStored = getOneValueFromUserList($mysql, 'verificationKey', $username);
+    $verificationKeyExpiration = getOneValueFromUserList($this->mysql, "verificationKeyExpiration", $this->username);                    
+    validateUser($mysql, $username );
+    
     if (strcmp($verificationKeyStored, $verificationKey)) {        
         throw new Exception("Key provided did not match stored key");
     }
-    validateUser($mysql, $username);
+        
+    $timeInDb = strtotime($verificationKeyExpiration);
+    $timeNow = time();
+    $timeIn15Min = time()+15*60;
+    if ( $timeInDb < $timeNow || $timeInDb > $timeIn15Min ){
+        throw new Exception( "Outside of verification time window for 15 minutes." );
+    }
+    
+    setPassword( $mysql, $username, $newPassword );    
 }
 
 function resetPassword($mysql, $username, $verificationKey) {    
