@@ -121,5 +121,35 @@ function getParameter($mysql, $paramName) {
     return $mysql->real_escape_string($rawValue);
 }
 
-
-?>
+function checkUserEditKeyOrRECAPTCHA($mysql) {
+    //Check if we have a recaptcha a user creation key
+    $isHuman = false;        
+    try {             
+        $privateKeyProvided = getParameter($mysql, "userEditKey");                                        
+        if (!strcmp($privateKeyProvided, getUserEditKey())) {           
+            $isHuman = true;            
+        } else {                        
+        }
+    } catch (Exception $e) {
+        //Do nothing.         
+    }        
+    
+    
+    if ( !$isHuman ) {
+        $challenge = getParameter($mysql, "recapcha_challenge_field");
+        $response = getParameter($mysql, "recapcha_response_field");        
+        
+        $privateCAPTHCAkey = getCAPCHAPrivateKey();                
+        
+        try {
+            $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);        
+        } catch ( Exception $e ) {
+            throw new Exception( "reCAPCHA errored: " . $e->getMessage() );            
+        }        
+        
+        if (!$resp->is_valid) {
+            return false;
+        }        
+    }    
+    return $isHuman;
+}

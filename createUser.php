@@ -24,46 +24,16 @@ try {
         }
     } catch ( Exception $e ) {
         
-    }                    
-    //Check if we have a recaptcha a user creation key
-    $isHuman = false;        
-    try {             
-        $privateKeyProvided = getParameter($mysql, "userEditKey");                                        
-        if (!strcmp($privateKeyProvided, getUserEditKey())) {           
-            $isHuman = true;            
-        } else {                        
-        }
-    } catch (Exception $e) {
-        //Do nothing.         
-    }        
-    
-    
-    if ( !$isHuman ) {
-        $challenge = getParameter($mysql, "recapcha_challenge_field");
-        $response = getParameter($mysql, "recapcha_response_field");        
+    }   
         
-        $privateCAPTHCAkey = getCAPCHAPrivateKey();                
-        
-        try {
-            $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);        
-        } catch ( Exception $e ) {
-            echo "reCAPCHA errored: " . $e->getMessage();
-            return;
-        }        
-        
-        if (!$resp->is_valid) {
-            echo "INVALID_CAPTCHA";
-            return;
-        } else {
-            $isHuman = true;
-        }    
-
-    }          
+    if ( !checkUserEditKeyOrRECAPTCHA($mysql) ) {
+        echo "INVALID_CAPCHA";
+        return;
+    }
     
     $id = insertUser($mysql, $username, $password, $email);
     if ( $id == 0 ) {
-        echo "DUPLICATE_USER";
-        return;
+        echo "DUPLICATE_USER";        
     } else {    
         echo "OK";
     }            
