@@ -103,17 +103,18 @@ function validateUserWithKey($mysql, $username, $verificationKey) {
 }
 
 function resetPassword($mysql, $username, $verificationKey) {    
+    $timeIn15Minutes = date("Y-m-d H:i:s", time() + 15*60 );
     
-    try {
-        $query = "UPDATE masterpassword_users SET verificationKey=? WHERE username=?";
-
+    try {        
+        $query = "UPDATE masterpassword_users SET verificationKey=?,verificationKeyExpiration=? WHERE username=?";
+        
         $stmt = $mysql->prepare($query);
 
         if (!$stmt) {
             throw new Exception();
         }
 
-        if (!$stmt->bind_param('ss', $verificationKey, $username)) {
+        if (!$stmt->bind_param('sss', $verificationKey, $timeIn15Minutes, $username)) {
             throw new Exception();
         }
 

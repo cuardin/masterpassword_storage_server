@@ -108,7 +108,17 @@ class UserManagementCoreTest extends UnitTestCase {
         resetPassword( $this->mysql, $this->username, "newKey" );
         
         //Make sure key was actually changed.
-        $keyInDB = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
-        $this->assertEqual($keyInDB, "newKey");
+        $verificationKey = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
+        $this->assertEqual($verificationKey, "newKey");
+        
+        $verificationKeyExpiration = getOneValueFromUserList($this->mysql, "verificationKeyExpiration", $this->username);        
+        $this->assertNotNull($verificationKeyExpiration);
+        $timeInDb = strtotime($verificationKeyExpiration);
+        $timeIn10Min = time()+10*60;
+        $timeIn15Min = time()+15*60;
+                
+        $this->assertTrue($timeInDb >= $timeIn10Min);
+        $this->assertTrue($timeInDb <= $timeIn15Min);
+        
     }    
 }
