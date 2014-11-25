@@ -68,7 +68,7 @@ function getUserNameFromEmail($mysql, $email) {
 
 function getOneValueFromUserList($mysql, $field, $username) {
     if (preg_match('/[^a-z]/i', $field)) {
-        return null;
+        throw new Exception( "Field name contained invalid characters." );
     }
     $query = 'SELECT ' . $field . ' FROM masterpassword_users WHERE username=?';    
     return getOneValueFromDataBase($mysql, $query, $username);
@@ -110,19 +110,15 @@ function getDateString() {
 
 
 function getParameter($mysql, $paramName) {
-    
-    if ( !array_key_exists($paramName, $_GET) && !array_key_exists($paramName, $_POST)) {
-        error_log( "Input param requested but not found: $paramName" );
-        //die();
+    //echo $paramName . ":";
+    if ( !array_key_exists($paramName, $_GET) && !array_key_exists($paramName, $_POST)) {        
         throw new Exception ( "Parameter requested was not provided: " . $paramName);
     }
     $rawValue = $_GET[$paramName];
     if (!strcmp($rawValue, "")) {
         $rawValue = $_POST[$paramName];
     }    
-    $param_val_escaped = $mysql->real_escape_string($rawValue);        
-    
-    return $param_val_escaped;
+    return $mysql->real_escape_string($rawValue);
 }
 
 
