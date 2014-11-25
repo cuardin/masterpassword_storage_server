@@ -48,7 +48,7 @@ class UserManagementCoreTest extends UnitTestCase {
         
         //Now delete user
         //echo "Deleting user<br/>";
-        deleteUser( $this->mysql, $this->username );
+        deleteUserWithKey( $this->mysql, $this->username, $this->password, "" );
         
         //And check that the user was actually deleted
         $this->assertNull( 
@@ -89,7 +89,20 @@ class UserManagementCoreTest extends UnitTestCase {
                         $this->username) );       
     }
     
-    public function testDeleteUserWithWrongPrivateKey() {
+    public function testDeleteUserWithPassword() {
+        //Create a user to delete
+        insertUser($this->mysql, $this->username, $this->password,
+               $this->email);
+                
+        deleteUserWithKey( $this->mysql, $this->username, $this->password, "");
+        
+        //And check that the user was actually deleted
+        $this->assertNull( 
+                getOneValueFromUserList($this->mysql, "username", 
+                        $this->username) );       
+    }
+
+    public function testDeleteUserWithWrongPrivateKeyAndPassword() {
         //Create a user to delete
         insertUser($this->mysql, $this->username, $this->password,
                 $this->email);                    
@@ -98,7 +111,7 @@ class UserManagementCoreTest extends UnitTestCase {
         deleteUserWithKey( $this->mysql, $this->username, "", "" );
         
     }
-       
+         
     
     public function testResetPassword() {
         //Create a user to validate

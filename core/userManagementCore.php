@@ -86,8 +86,8 @@ function validateUser($mysql, $username ) {
     }
 }
 
-function deleteUserWithKey($mysql, $username, $password, $privateKey) {
-    if (!strcmp($privateKey, getUserEditKey())) {
+function deleteUserWithKey($mysql, $username, $password, $privateKey) {    
+    if (!strcmp($privateKey, getUserEditKey()) || authenticateUser($mysql, $username, $password)) {
         deleteUser($mysql, $username);
     } else {
         throw new Exception("Authentication failed");

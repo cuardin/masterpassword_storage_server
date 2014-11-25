@@ -8,8 +8,23 @@ try {
     $mysql = connectDatabase();
     $username = getParameter($mysql,"email");    
     
-    authenticateUser($mysql, $username, $password);    
-    echo "OK";
+    $mailer = new Mailer();
+    try {
+        $isTest = getParameter($mysql, "test");
+        if ( !strcmp($isTest, 'true') ) {
+            $mailer = new MailerStub();
+        }
+    } catch ( Exception $e ) {
+        
+    }   
+    
+    if ( !checkUserEditKeyOrRECAPTCHA($mysql) ) {
+        echo "INVALID_CAPCHA";
+        return;
+    }
+    $verificationKey = rand_string($length);    
+    
+    resetPassword($mysql, $email, $verificationKey );
     
 } catch ( Exception $e) {    
     echo "FAIL: " . $e->getMessage();
