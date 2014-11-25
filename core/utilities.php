@@ -6,10 +6,6 @@ function init() {
     header('Content-Type: text/html; charset=utf-8');
 }
 
-function getGlobalSeed() {
-    return "1";
-}
-
 function rand_string($length) {
     $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -121,5 +117,20 @@ function getParameter($mysql, $paramName) {
     return $mysql->real_escape_string($rawValue);
 }
 
+function getTotalRowsInTable($mysql, $table )
+{
+    $query = "SELECT COUNT(*) FROM $table";
+    $result = mysqli_query($mysql,$query);    
+    $rows = mysqli_fetch_row($result);
+    return $rows[0];
+}
 
-?>
+function checkRoomForOneMoreFile($mysql)
+{
+    return getTotalRowsInTable($mysql, "masterpassword_files") < getMaxNumberOfFiles();
+}
+
+function checkRoomForOneMoreUser($mysql)
+{
+    return getTotalRowsInTable($mysql, "masterpassword_users") < getMaxNumberOfUSers();
+}

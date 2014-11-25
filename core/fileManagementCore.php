@@ -3,6 +3,11 @@
 require_once(dirname(__FILE__).'/utilities.php');
 
 function insertFile($mysql, $username, $fileName, $fileContents) {
+    //First check if there is room for one more user
+    if ( !checkRoomForOneMoreFile($mysql)) {
+        throw new Exception( "DATABASE_FULL" );
+    }
+    
     $query = "INSERT INTO masterpassword_files (fileKey, username, fileName, fileContents )" .
             "VALUES ('null', ?, ?, ?)";
 

@@ -7,14 +7,20 @@ function configParamSet( $param ) {
         "BaseURL" => "",
         "CAPCHAPublic" => "",
         "CAPCHAPrivate" => "",
-        "UserEditKey" => "");    
+        "UserEditKey" => "",
+        "GLobalSeed" => 1,
+        "MaxUsers" => 100,
+        "MaxFiles" => 1000);
     $local_server = array( "SQLUserName" => "root", 
         "SQLPassword" => "", 
         "SQLDBName" => "",
         "BaseURL" => "",
         "CAPCHAPublic" => "",
         "CAPCHAPrivate" => "",
-        "UserEditKey" => "");
+        "UserEditKey" => "",
+        "GLobalSeed" => 1,
+        "MaxUsers" => 100,
+        "MaxFiles" => 10000);
     $configSet = array( '192.168.56.101' => $local_server, 'masterpassword.armyr.se' => $armyr_se );
     
     return $configSet[$_SERVER['HTTP_HOST']][$param];
@@ -49,4 +55,16 @@ function getCAPCHAPrivateKey() {
 
 function getUserEditKey() {
     return configParamSet( "UserEditKey");
+}
+
+function getGlobalSeed() {
+    return configParamSet( "GlobalSeed");
+}
+
+function getMaxNumberOfUsers() {
+    return configParamSet( "MaxUsers");
+}
+
+function getMaxNumberOfFiles() {
+    return configParamSet( "MaxFiles");
 }

@@ -31,9 +31,9 @@ class UserManagementCoreTest extends UnitTestCase {
     public function testInsertAndDeleteUser() {
         
         //echo "Inserting user<br/>";
-        $id = insertUser($this->mysql, $this->username, 
+        $message = insertUser($this->mysql, $this->username, 
                 $this->password,  $this->email);
-        $this->assertNotEqual($id, 0);
+        $this->assertEqual($message, "OK");
         
         //Now check that a user was actually inserted.
         $this->assertEqual( $this->username, 
@@ -59,9 +59,9 @@ class UserManagementCoreTest extends UnitTestCase {
     public function testInsertUserWithDulicateUsernameOrPassword() {                
         //Arrange
         //Insert a user with an email adress.
-        $id1 = insertUser($this->mysql, $this->username, 
+        $message1 = insertUser($this->mysql, $this->username, 
                 $this->password, $this->email);
-        $this->assertNotEqual($id1, 0);
+        $this->assertEqual($message1, "OK");
         
         //Act
         //Now insert a user with different username but same adress        

@@ -103,5 +103,12 @@ class UtilitiesTest extends UnitTestCase {
         }
     }
      
+    public function testGetNumberOfRows ()
+    {        
+        $mysql = connectDatabase();
+        $table = "masterpassword_parameters";        
+        $var = getTotalRowsInTable($mysql, $table );
+        $this->assertEqual("3", $var);
+    }
        
 }
