@@ -28,7 +28,7 @@ class FileManagementTests extends WebTestCase {
                $this->verificationKey, $this->email);
         
         //And validate user emial, otherwise we canot authenticate.        
-        validateUser( $this->mysql, $this->username, $this->password );
+        clearValidationData( $this->mysql, $this->username, $this->password );
 
     }
     

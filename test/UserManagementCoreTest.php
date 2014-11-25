@@ -134,4 +134,12 @@ class UserManagementCoreTest extends UnitTestCase {
         $this->assertTrue($timeInDb <= $timeIn15Min);
         
     }    
+    
+    public function testSetPassword() {
+        insertUser($this->mysql, $this->username, $this->password,
+               $this->email);                        
+        setPassword( $this->mysql, $this->username, "newPass");
+        $verificationKey = getOneValueFromUserList($this->mysql, "password", $this->username);        
+        $this->assertEqual($verificationKey, "newPass");
+    }
 }

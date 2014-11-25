@@ -63,7 +63,7 @@ function deleteUser($mysql, $username) {
     }
 }
 
-function validateUser($mysql, $username ) {
+function clearValidationData($mysql, $username ) {
     $query = "UPDATE masterpassword_users SET verificationKey='0',verificationKeyExpiration=NULL WHERE username=?";
     //echo $query . "<br/>";
     try {
@@ -94,10 +94,32 @@ function deleteUserWithKey($mysql, $username, $password, $privateKey) {
     }
 }
 
+function setPassword( $mysql, $username, $newPassword ) {
+    $query = "UPDATE masterpassword_users SET password=? WHERE username=?";
+    //echo $query . "<br/>";
+    try {
+        $stmt = $mysql->prepare($query);
+        if (!$stmt) {
+            throw new Exception('Error preparing sql statement');
+        }
+        if (!$stmt->bind_param('ss', $newPassword, $username)) {
+            throw new Exception('Error binding parameters');
+        }
+        if (!$stmt->execute()) {
+            throw new Exception('Error executing statement');
+        }
+        if (!$stmt->close()) {
+            throw new Exception('Error closing statement');
+        }
+    } catch (Exception $e) {
+        //echo $e->getMessage() . "<br/>";
+        throw new Exception(htmlspecialchars($mysql->error));
+    }
+}
 function validateUserWithKey($mysql, $username, $verificationKey, $newPassword) {
     $verificationKeyStored = getOneValueFromUserList($mysql, 'verificationKey', $username);
     $verificationKeyExpiration = getOneValueFromUserList($this->mysql, "verificationKeyExpiration", $this->username);                    
-    validateUser($mysql, $username );
+    clearValidationData($mysql, $username );
     
     if (strcmp($verificationKeyStored, $verificationKey)) {        
         throw new Exception("Key provided did not match stored key");

@@ -28,7 +28,7 @@ class authenticateUserCoreTest extends UnitTestCase {
     
     public function testAuthenticateUserSimple() {
         
-        validateUser($this->mysql, $this->username, $this->password);
+        clearValidationData($this->mysql, $this->username, $this->password);
         
         $this->assertTrue( authenticateUser($this->mysql, $this->username, 
                 $this->password) );
@@ -44,7 +44,7 @@ class authenticateUserCoreTest extends UnitTestCase {
     }
     
     public function testAuthenticateUserWrongUsername() {
-        validateUser($this->mysql, $this->username, $this->password );
+        clearValidationData($this->mysql, $this->username, $this->password );
         try {
             authenticateUser($this->mysql, "n/a", 
                 $this->password);
@@ -55,7 +55,7 @@ class authenticateUserCoreTest extends UnitTestCase {
     }
 
     public function testAuthenticateUserWrongPassword() {
-        validateUser($this->mysql, $this->username, $this->password );
+        clearValidationData($this->mysql, $this->username, $this->password );
         try {
             authenticateUser($this->mysql, $this->username, 
                 "N/A");

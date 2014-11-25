@@ -28,7 +28,7 @@ class FileManagementCoreTest extends UnitTestCase {
         //Then setup.
         insertUser($this->mysql, $this->username, $this->password,
                 $this->verificationKey, $this->email);
-        validateUser($this->mysql, $this->username, $this->password );
+        clearValidationData($this->mysql, $this->username, $this->password );
                 
         $this->fileID = insertFile($this->mysql, $this->username, 
                 $this->fileName, $this->fileContents);
