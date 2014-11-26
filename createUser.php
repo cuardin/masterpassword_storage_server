@@ -9,8 +9,10 @@ require_once ( './test/MailerStub.php' );
 init();
 
 try {
-    $mysql = connectDatabase();    
-
+    $mysql = connectDatabase();        
+    
+    //error_log( $_SERVER['QUERY_STRING']);
+    
     //Escape all the user input to be SQL safe.
     $username = getParameter($mysql, "username");
     $email = getParameter($mysql, "email");
@@ -26,7 +28,9 @@ try {
         
     }   
         
-    if ( !checkUserEditKeyOrRECAPTCHA($mysql) ) {
+    $rValue = checkUserEditKeyOrRECAPTCHA($mysql);
+    error_log ( "Return: $rValue" );
+    if ( !$rValue ) {
         echo "INVALID_CAPCHA";
         return;
     }

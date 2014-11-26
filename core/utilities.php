@@ -128,8 +128,7 @@ function checkUserEditKeyOrRECAPTCHA($mysql) {
         }
     } catch (Exception $e) {
         //Do nothing.         
-    }        
-    
+    }            
     
     if ( !$isHuman ) {
         $challenge = getParameter($mysql, "recapcha_challenge_field");
@@ -140,12 +139,15 @@ function checkUserEditKeyOrRECAPTCHA($mysql) {
         try {
             $resp = recaptcha_check_answer($privateCAPTHCAkey, $_SERVER["REMOTE_ADDR"], $challenge, $response);        
         } catch ( Exception $e ) {
+            error_log( "reCAPCHA errored: " . $e->getMessage() );            
             throw new Exception( "reCAPCHA errored: " . $e->getMessage() );            
         }        
         
-        if (!$resp->is_valid) {
-            return false;
-        }        
+        if (!$resp->is_valid) {            
+            $isHuman = false; //Still false.
+        } else {            
+            $isHuman = true;
+        }       
     }    
     return $isHuman;
 }
