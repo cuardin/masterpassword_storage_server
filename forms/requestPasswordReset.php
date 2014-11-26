@@ -13,9 +13,13 @@ require_once('../core/recaptchalib.php');
         <h1>Request password reset</h1>
         <form method="POST" action="<?echo getBaseURL() . "resetPassword.php";?>">
             <label for="email">Email</label>
-            <input type="email"/>
-            <?echo recaptcha_get_html(getCAPCHAPublicKey(),null,true); ?>
+            <input type="email" name="email"/>
+            <input type="hidden" name="test" value="true"/>
+            <?//echo recaptcha_get_html(getCAPCHAPublicKey(),null,true); ?>
             <button>Submit</button>
         </form>
+        <script>
+            
+        </script>
     </body>
 </html>

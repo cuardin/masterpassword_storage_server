@@ -107,13 +107,15 @@ function getDateString() {
 
 function getParameter($mysql, $paramName) {
     //echo $paramName . ":";
-    if ( !array_key_exists($paramName, $_GET) && !array_key_exists($paramName, $_POST)) {        
+    if ( array_key_exists($paramName, $_GET) ) {
+        $rawValue = $_GET[$paramName];
+    } else if ( array_key_exists($paramName, $_POST)) {        
+        $rawValue = $_POST[$paramName];
+    } else {
         throw new Exception ( "Parameter requested was not provided: " . $paramName);
     }
-    $rawValue = $_GET[$paramName];
-    if (!strcmp($rawValue, "")) {
-        $rawValue = $_POST[$paramName];
-    }    
+    
+    $rawValue = urldecode($rawValue);
     return $mysql->real_escape_string($rawValue);
 }
 
@@ -131,8 +133,8 @@ function checkUserEditKeyOrRECAPTCHA($mysql) {
     }            
     
     if ( !$isHuman ) {
-        $challenge = getParameter($mysql, "recapcha_challenge_field");
-        $response = getParameter($mysql, "recapcha_response_field");        
+        $challenge = getParameter($mysql, "recaptcha_challenge_field");
+        $response = getParameter($mysql, "recaptcha_response_field");        
         
         $privateCAPTHCAkey = getCAPCHAPrivateKey();                
         

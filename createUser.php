@@ -29,7 +29,7 @@ try {
     }   
         
     $rValue = checkUserEditKeyOrRECAPTCHA($mysql);
-    error_log ( "Return: $rValue" );
+    
     if ( !$rValue ) {
         echo "INVALID_CAPCHA";
         return;
