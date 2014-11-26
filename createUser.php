@@ -31,12 +31,9 @@ try {
         return;
     }
     
-    $id = insertUser($mysql, $username, $password, $email);
-    if ( $id == 0 ) {
-        echo "DUPLICATE_USER";        
-    } else {    
-        echo "OK";
-    }            
+    $message = insertUser($mysql, $username, $password, $email);    
+    echo $message;
+    
 
 } catch (Exception $e) {
     echo ( "FAIL: " . $e->getMessage() );

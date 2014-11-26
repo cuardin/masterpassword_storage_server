@@ -43,9 +43,9 @@ class UserManagementTest extends WebTestCase {
     
     function testCreateDuplicateUser() {        
         //Arrange
-        $id = insertUser($this->mysql, $this->username, 
+        $message = insertUser($this->mysql, $this->username, 
                 $this->password,  $this->email);
-        $this->assertNotEqual($id, 0);        
+        $this->assertEqual($message, "OK");        
         
         //Act: Same username different email
         $this->get( getBaseURL() . "/createUser.php?" .

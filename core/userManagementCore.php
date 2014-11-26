@@ -3,14 +3,19 @@
 function insertUser($mysql, $username, $password, $email) {    
     //TODO: This entire function has to be an atomic operation.
     
+    //First check if there is room for one more user
+    if ( !checkRoomForOneMoreUser($mysql)) {
+        throw new Exception( "DATABASE_FULL" );
+    }
+    
     //Check if someone exists with the same email.
     if ( getUserNameFromEmail($mysql, $email) != null ) {
-        return 0;
+        return "DUPLICATE_USER";
     }    
     
     //Check if someone exists with the same user name
     if ( getOneValueFromUserList($mysql, "username", $username) != null ) {
-        return 0;
+        return "DUPLICATE_USER";
     }
     
     $passwordCrypt = crypt($password);    
@@ -32,8 +37,8 @@ function insertUser($mysql, $username, $password, $email) {
         if (!$stmt->close()) {
             throw new Exception('Error closing statement');
         }
-       
-        return mysqli_insert_id($mysql);        
+               
+        return "OK";                
         
     } catch (Exception $e) {        
         throw new Exception(htmlspecialchars($mysql->error));
