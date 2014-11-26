@@ -105,8 +105,6 @@ class UserManagementTest extends WebTestCase {
     function testEradicateUserSimple() {                
         insertUser($this->mysql, $this->username, $this->password,
                $this->verificationKey, $this->email);                
-        clearValidationData( $this->mysql, $this->username, 
-                $this->password );
         
         $this->get( getBaseURL() . "eradicateUser.php?" .
                 "username=$this->username&password=$this->password");                
@@ -116,8 +114,6 @@ class UserManagementTest extends WebTestCase {
     function testEradicateUserBadPassword() {                
         insertUser($this->mysql, $this->username, $this->password,
                $this->verificationKey, $this->email);                
-        clearValidationData( $this->mysql, $this->username, 
-                $this->password );
         
         $this->get( getBaseURL() . "eradicateUser.php?" .
                 "username=$this->username&password=badPassword&" .
@@ -128,8 +124,6 @@ class UserManagementTest extends WebTestCase {
     function testEradicateUserBadPrivateKey() {                
         insertUser($this->mysql, $this->username, $this->password,
                $this->verificationKey, $this->email);                
-        clearValidationData( $this->mysql, $this->username, 
-                $this->password );
         
         $this->get( getBaseURL() . "eradicateUser.php?" .
                 "username=$this->username&password=badPassword&" .
@@ -137,5 +131,12 @@ class UserManagementTest extends WebTestCase {
         $this->assertText( 'FAIL' );                 
     }
      
+    function testResetPassword()
+    {
+        insertUser($this->mysql, $this->username, $this->password,
+               $this->verificationKey, $this->email);                
+        
+        //TODO: Do the rest.
+    }
      
 }

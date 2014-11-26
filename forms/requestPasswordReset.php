@@ -1,4 +1,7 @@
-<?require_once('../core/utilitiesSecret.php');?>
+<?
+require_once('../core/utilitiesSecret.php');
+require_once('../core/recaptchalib.php');
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -11,6 +14,7 @@
         <form method="POST" action="<?echo getBaseURL() . "resetPassword.php";?>">
             <label for="email">Email</label>
             <input type="email"/>
+            <?echo recaptcha_get_html(getCAPCHAPublicKey(),null,true); ?>
             <button>Submit</button>
         </form>
     </body>
