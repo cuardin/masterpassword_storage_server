@@ -94,15 +94,15 @@ function deleteUserWithKey($mysql, $username, $password, $privateKey) {
     }
 }
 
-function setPassword( $mysql, $username, $newPassword ) {
-    $query = "UPDATE masterpassword_users SET password=? WHERE username=?";
+function setPassword( $mysql, $email, $newPassword ) {
+    $query = "UPDATE masterpassword_users SET password=? WHERE email=?";
     //echo $query . "<br/>";
     try {
         $stmt = $mysql->prepare($query);
         if (!$stmt) {
             throw new Exception('Error preparing sql statement');
         }
-        if (!$stmt->bind_param('ss', $newPassword, $username)) {
+        if (!$stmt->bind_param('ss', $newPassword, $email)) {
             throw new Exception('Error binding parameters');
         }
         if (!$stmt->execute()) {
@@ -135,11 +135,11 @@ function validateUserWithKey($mysql, $username, $verificationKey, $newPassword) 
     setPassword( $mysql, $username, $newPassword );    
 }
 
-function resetPassword($mysql, $username, $verificationKey) {    
+function resetPassword($mysql, $email, $verificationKey) {    
     $timeIn15Minutes = date("Y-m-d H:i:s", time() + 15*60 );
     
     try {        
-        $query = "UPDATE masterpassword_users SET verificationKey=?,verificationKeyExpiration=? WHERE username=?";
+        $query = "UPDATE masterpassword_users SET verificationKey=?,verificationKeyExpiration=? WHERE email=?";
         
         $stmt = $mysql->prepare($query);
 
@@ -147,7 +147,7 @@ function resetPassword($mysql, $username, $verificationKey) {
             throw new Exception();
         }
 
-        if (!$stmt->bind_param('sss', $verificationKey, $timeIn15Minutes, $username)) {
+        if (!$stmt->bind_param('sss', $verificationKey, $timeIn15Minutes, $email)) {
             throw new Exception();
         }
 

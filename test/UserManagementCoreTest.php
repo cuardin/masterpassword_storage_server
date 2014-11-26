@@ -118,7 +118,7 @@ class UserManagementCoreTest extends UnitTestCase {
         insertUser($this->mysql, $this->username, $this->password,
                $this->email);                        
         
-        resetPassword( $this->mysql, $this->username, "newKey" );
+        resetPassword( $this->mysql, $this->email, "newKey" );
         
         //Make sure key was actually changed.
         $verificationKey = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
@@ -138,7 +138,7 @@ class UserManagementCoreTest extends UnitTestCase {
     public function testSetPassword() {
         insertUser($this->mysql, $this->username, $this->password,
                $this->email);                        
-        setPassword( $this->mysql, $this->username, "newPass");
+        setPassword( $this->mysql, $this->email, "newPass");
         $verificationKey = getOneValueFromUserList($this->mysql, "password", $this->username);        
         $this->assertEqual($verificationKey, "newPass");
     }
