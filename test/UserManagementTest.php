@@ -104,7 +104,7 @@ class UserManagementTest extends WebTestCase {
     
     function testEradicateUserSimple() {                
         insertUser($this->mysql, $this->username, $this->password,
-               $this->verificationKey, $this->email);                
+               $this->email);                
         
         $this->get( getBaseURL() . "eradicateUser.php?" .
                 "username=$this->username&password=$this->password");                
@@ -113,7 +113,7 @@ class UserManagementTest extends WebTestCase {
 
     function testEradicateUserBadPassword() {                
         insertUser($this->mysql, $this->username, $this->password,
-               $this->verificationKey, $this->email);                
+               $this->email);                
         
         $this->get( getBaseURL() . "eradicateUser.php?" .
                 "username=$this->username&password=badPassword&" .
@@ -123,7 +123,7 @@ class UserManagementTest extends WebTestCase {
 
     function testEradicateUserBadPrivateKey() {                
         insertUser($this->mysql, $this->username, $this->password,
-               $this->verificationKey, $this->email);                
+               $this->email);                
         
         $this->get( getBaseURL() . "eradicateUser.php?" .
                 "username=$this->username&password=badPassword&" .
@@ -131,12 +131,30 @@ class UserManagementTest extends WebTestCase {
         $this->assertText( 'FAIL' );                 
     }
      
-    function testResetPassword()
-    {
+    function testResetPasswordAndSetNewPass()
+    {        
         insertUser($this->mysql, $this->username, $this->password,
-               $this->verificationKey, $this->email);                
+               $this->email);   
         
-        //TODO: Do the rest.
+        $this->get( getBaseURL() . "resetPassword.php?" .
+                "email=$this->email&" .
+                "userEditKey=$this->userEditKey&".
+                "test=true");                        
+        $this->assertText( 'OK' );                         
+        
+        //Now get the verification key from the database
+        $verificationKey = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
+        
+        //And set a new password
+        $this->get( getbaseURL(). "setNewPassword.php?" .
+                "username=$this->username&".
+                "verificationKey=$verificationKey&".
+                "newPassword=newPass" );
+        $this->assertText( 'OK' );
+        
+        //And check that the new password was set        
+        $newPass = getOneValueFromUserList($this->mysql, "password", $this->username);                
+        $this->assertEqual($newPass, crypt("newPass", $newPass) );        
     }
      
 }

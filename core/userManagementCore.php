@@ -18,7 +18,7 @@ function insertUser($mysql, $username, $password, $email) {
         return "DUPLICATE_USER";
     }
     
-    $passwordCrypt = crypt($password);    
+    $passwordCrypt = crypt($password);
     $seed = "1";
     $query = "INSERT INTO masterpassword_users (username, password, seed, email)" .
             "VALUES (?, ?, ?, ?)";
@@ -99,15 +99,18 @@ function deleteUserWithKey($mysql, $username, $password, $privateKey) {
     }
 }
 
-function setPassword( $mysql, $email, $newPassword ) {
-    $query = "UPDATE masterpassword_users SET password=? WHERE email=?";
+function setPassword( $mysql, $userName, $newPassword ) {
+    
+    $newPassword = crypt($newPassword);
+    
+    $query = "UPDATE masterpassword_users SET password=? WHERE userName=?";
     //echo $query . "<br/>";
     try {
         $stmt = $mysql->prepare($query);
         if (!$stmt) {
             throw new Exception('Error preparing sql statement');
         }
-        if (!$stmt->bind_param('ss', $newPassword, $email)) {
+        if (!$stmt->bind_param('ss', $newPassword, $userName)) {
             throw new Exception('Error binding parameters');
         }
         if (!$stmt->execute()) {
@@ -123,7 +126,7 @@ function setPassword( $mysql, $email, $newPassword ) {
 }
 function validateUserWithKey($mysql, $username, $verificationKey, $newPassword) {
     $verificationKeyStored = getOneValueFromUserList($mysql, 'verificationKey', $username);
-    $verificationKeyExpiration = getOneValueFromUserList($this->mysql, "verificationKeyExpiration", $this->username);                    
+    $verificationKeyExpiration = getOneValueFromUserList($mysql, "verificationKeyExpiration", $username);                    
     clearValidationData($mysql, $username );
     
     if (strcmp($verificationKeyStored, $verificationKey)) {        
@@ -134,17 +137,18 @@ function validateUserWithKey($mysql, $username, $verificationKey, $newPassword) 
     $timeNow = time();
     $timeIn15Min = time()+15*60;
     if ( $timeInDb < $timeNow || $timeInDb > $timeIn15Min ){
+        echo "$verificationKeyExpiration::$timeInDb::$timeNow::$timeIn15Min";
         throw new Exception( "Outside of verification time window for 15 minutes." );
     }
     
     setPassword( $mysql, $username, $newPassword );    
 }
 
-function resetPassword($mysql, $email, $verificationKey) {    
+function resetPassword($mysql, $username, $verificationKey) {    
     $timeIn15Minutes = date("Y-m-d H:i:s", time() + 15*60 );
     
     try {        
-        $query = "UPDATE masterpassword_users SET verificationKey=?,verificationKeyExpiration=? WHERE email=?";
+        $query = "UPDATE masterpassword_users SET verificationKey=?,verificationKeyExpiration=? WHERE username=?";
         
         $stmt = $mysql->prepare($query);
 
@@ -152,7 +156,7 @@ function resetPassword($mysql, $email, $verificationKey) {
             throw new Exception();
         }
 
-        if (!$stmt->bind_param('sss', $verificationKey, $timeIn15Minutes, $email)) {
+        if (!$stmt->bind_param('sss', $verificationKey, $timeIn15Minutes, $username)) {
             throw new Exception();
         }
 

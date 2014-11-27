@@ -13,11 +13,11 @@ try {
     
     $mysql = connectDatabase();
     $email = getParameter($mysql,"email");    
-    echo "Email: " . $email . "<br/>";
-    echo "User name: " . getUserNameFromEmail($mysql, $email) . "<br/>";
+    //echo "Email: " . $email . "<br/>";
+    //echo "User name: " . getUserNameFromEmail($mysql, $email) . "<br/>";
     
     $mailer = new Mailer();
-    try {
+    /*try {
         $isTest = getParameter($mysql, "test");
         if ( !strcmp($isTest, 'true') ) {
             error_log( "Using stub mailer." );
@@ -25,21 +25,24 @@ try {
         }
     } catch ( Exception $e ) {
         
-    }   
+    } */  
     
-    /*if ( !checkUserEditKeyOrRECAPTCHA($mysql) ) {                
+    if ( !checkUserEditKeyOrRECAPTCHA($mysql) ) {                
         echo "INVALID_CAPTCHA. Go <a href='javascript:history.back()'>Back</a>";
         return;
-    }*/
+    }
     
     $verificationKey = rand_string(32);    
+    $username = getUserNameFromEmail($mysql, $email);
+    resetPassword($mysql, $username, $verificationKey );    
     
-    resetPassword($mysql, $email, $verificationKey );
-    
-    $url = getBaseURL() . "forms/setNewPasswordForm.php?verificationKey=$verificationKey";
+    echo "OK";
+            
+    $url = getBaseURL() . "forms/setNewPasswordForm.php?verificationKey=$verificationKey&username=$username";
     $mailer->sendEmail( $email, "Password reset request", "A password request has been requested. Click <a href='$url'>here</a> to reset the password within 15 minutes.", "postmaster@armyr.se" );
-        
-    echo "Password reset successful";
+    
+    
+    
     
 } catch ( Exception $e) {    
     echo "FAIL: " . $e->getMessage();
