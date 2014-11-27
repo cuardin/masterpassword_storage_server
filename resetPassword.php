@@ -26,11 +26,11 @@ try {
     } catch ( Exception $e ) {
         
     } */  
-    
+    /*
     if ( !checkUserEditKeyOrRECAPTCHA($mysql) ) {                
         echo "INVALID_CAPTCHA. Go <a href='javascript:history.back()'>Back</a>";
         return;
-    }
+    }*/
     
     $verificationKey = rand_string(32);    
     $username = getUserNameFromEmail($mysql, $email);

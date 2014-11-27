@@ -130,18 +130,19 @@ function validateUserWithKey($mysql, $username, $verificationKey, $newPassword) 
     clearValidationData($mysql, $username );
     
     if (strcmp($verificationKeyStored, $verificationKey)) {        
-        throw new Exception("Key provided did not match stored key");
+        return "BAD_VERIFICATION_KEY";
     }
         
     $timeInDb = strtotime($verificationKeyExpiration);
     $timeNow = time();
     $timeIn15Min = time()+15*60;
-    if ( $timeInDb < $timeNow || $timeInDb > $timeIn15Min ){
-        echo "$verificationKeyExpiration::$timeInDb::$timeNow::$timeIn15Min";
-        throw new Exception( "Outside of verification time window for 15 minutes." );
+    if ( $timeInDb < $timeNow || $timeInDb > $timeIn15Min ){        
+        return "BAD_VERIFICATION_KEY";
     }
     
     setPassword( $mysql, $username, $newPassword );    
+    
+    return "OK";
 }
 
 function resetPassword($mysql, $username, $verificationKey) {    

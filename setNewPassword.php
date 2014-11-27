@@ -13,9 +13,9 @@ try {
     $verificationKey = getParameter($mysql,"verificationKey");        
     $newPassword = getParameter($mysql,"newPassword");        
                         
-    validateUserWithKey($mysql, $username, $verificationKey, $newPassword );
+    $rValue = validateUserWithKey($mysql, $username, $verificationKey, $newPassword );
             
-    echo "OK";
+    echo $rValue;
     
 } catch ( Exception $e) {    
     echo "FAIL: " . $e->getMessage();

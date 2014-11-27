@@ -127,6 +127,7 @@ function checkUserEditKeyOrRECAPTCHA($mysql) {
         if (!strcmp($privateKeyProvided, getUserEditKey())) {           
             $isHuman = true;            
         } else {                        
+            //error_log( "$privateKeyProvided::" . getUserEditKey() );
         }
     } catch (Exception $e) {
         //Do nothing.         
