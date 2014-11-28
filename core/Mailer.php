@@ -12,10 +12,8 @@ require_once ( dirname(__FILE__).'/IMailer.php' );
  * @author cuardin
  */
 class Mailer implements IMailer {
-    function sendEmail( $to, $subject, $message, $from )
-    {        
-        //Now send an email
-        $headers = "From:" . $from;
+    function sendEmail( $to, $subject, $message, $headers )
+    {                        
         mail($to, $subject, $message, $headers);        
     }
 }

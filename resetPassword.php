@@ -36,16 +36,34 @@ try {
     $username = getUserNameFromEmail($mysql, $email);
     resetPassword($mysql, $username, $verificationKey );    
     
+    sendPasswordResetEmail($email,$mailer,$username,$verificationKey);
+    
     echo "OK";
-            
-    $url = getBaseURL() . "forms/setNewPasswordForm.php?verificationKey=$verificationKey&username=$username";
-    $mailer->sendEmail( $email, "Password reset request", "A password request has been requested. Click <a href='$url'>here</a> to reset the password within 15 minutes.", "postmaster@armyr.se" );
-    
-    
-    
-    
+                                    
 } catch ( Exception $e) {    
     echo "FAIL: " . $e->getMessage();
 }
 
-?> 
+function sendPasswordResetEmail($email,$mailer,$username,$verificationKey)
+{    
+
+    $subject = '[MasterPassword] Password Change Request';
+
+    $headers = "From: masterpassword@armyr.se\r\n";        
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+    
+    $url = getBaseURL() . "../java_script/form/setNewPassword.php?verificationKey=$verificationKey&username=$username"; 
+    
+    $message = '<html>'            
+            . '<body>'
+            . '<h1>Password change request</h1>'
+            . '<p>A password request has been made for your account. If you '
+            . 'did not make it, you can ignore this message.</p>'
+            . '<p>To change your password, click the following link:</p>'
+            . '<p><a href="' .$url . '">' . $url .'</a>'                                
+            . '</body></html>';
+                
+    
+    $mailer->sendEmail(  $email, $subject, $message, $headers );
+}
