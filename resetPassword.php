@@ -28,7 +28,7 @@ try {
     } */  
     
     if ( !checkUserEditKeyOrRECAPTCHA($mysql) ) {                
-        echo "INVALID_CAPTCHA. Go <a href='javascript:history.back()'>Back</a>";
+        echo "INVALID_CAPTCHA";
         return;
     }
     
