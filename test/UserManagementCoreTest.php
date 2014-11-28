@@ -171,4 +171,16 @@ class UserManagementCoreTest extends UnitTestCase {
         $verificationKeyExp = getOneValueFromUserList($this->mysql, "verificationKeyExpiration", $this->username);                
         $this->assertEqual($verificationKeyExp, NULL );
     }           
+    
+    public function testValidateUserWithZeroKey() {
+        insertUser($this->mysql, $this->username, $this->password,
+               $this->email);                                
+        
+        validateUserWithKey($this->mysql, $this->username, "0", "newPass");
+        
+        //Check that the password was not changed.
+        $newPass = getOneValueFromUserList($this->mysql, "password", $this->username);                
+        $this->assertEqual($newPass, crypt($this->password, $newPass) );
+                
+    }           
 }

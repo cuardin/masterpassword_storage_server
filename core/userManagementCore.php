@@ -137,7 +137,7 @@ function validateUserWithKey($mysql, $username, $verificationKey, $newPassword) 
     $timeInDb = strtotime($verificationKeyExpiration);
     $timeNow = time();
     $timeIn15Min = time()+15*60;
-    if ( $timeInDb < $timeNow || $timeInDb > $timeIn15Min ){        
+    if ( $timeInDb < $timeNow || $timeInDb > $timeIn15Min ){                
         return "BAD_VERIFICATION_KEY";
     }
     
