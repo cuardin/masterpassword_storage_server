@@ -157,6 +157,23 @@ class UserManagementTest extends WebTestCase {
         $this->assertEqual($newPass, crypt("newPass", $newPass) );        
     }
     
+    function testResetPasswordbadEditKey()
+    {        
+        insertUser($this->mysql, $this->username, $this->password,
+               $this->email);   
+        
+        $this->get( getBaseURL() . "resetPassword.php?" .
+                "email=$this->email&" .
+                "userEditKey=badKey&".
+                "test=true");                        
+        $this->assertText( 'FAIL' );                         
+        
+        //Now get the verification key from the database
+        $verificationKey = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);        
+                        
+        $this->assertEqual($verificationKey, "0" );        
+    }
+    
     function testSetNewPassBadKey()
     {        
         insertUser($this->mysql, $this->username, $this->password,
