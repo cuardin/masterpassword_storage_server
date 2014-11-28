@@ -52,9 +52,9 @@ function authenticateUser($mysql, $username, $password) {
     //Now check the fetched password against the stored
     if (strcmp($passwordStored, $passwordCrypt)) {                
         throw new Exception( "BAD_LOGIN" );
-     }
-
-     return true;
+    }    
+    
+    return true;
 }
 
 function getUserNameFromEmail($mysql, $email) {

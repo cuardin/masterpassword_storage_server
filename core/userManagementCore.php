@@ -68,7 +68,7 @@ function deleteUser($mysql, $username) {
     }
 }
 
-function clearValidationData($mysql, $username ) {
+function clearValidationData( $mysql, $username ) {
     $query = "UPDATE masterpassword_users SET verificationKey='0',verificationKeyExpiration=NULL WHERE username=?";
     //echo $query . "<br/>";
     try {
@@ -127,6 +127,7 @@ function setPassword( $mysql, $userName, $newPassword ) {
 function validateUserWithKey($mysql, $username, $verificationKey, $newPassword) {
     $verificationKeyStored = getOneValueFromUserList($mysql, 'verificationKey', $username);
     $verificationKeyExpiration = getOneValueFromUserList($mysql, "verificationKeyExpiration", $username);                    
+    
     clearValidationData($mysql, $username );
     
     if (strcmp($verificationKeyStored, $verificationKey)) {        

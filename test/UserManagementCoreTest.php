@@ -154,5 +154,21 @@ class UserManagementCoreTest extends UnitTestCase {
         $this->assertEqual($newPass, crypt("newPass", $newPass) );
     }
     
-    
+    public function testValidateUserWithWrongKey() {
+        insertUser($this->mysql, $this->username, $this->password,
+               $this->email);                        
+        resetPassword( $this->mysql, $this->username, "newKey" );        
+        
+        validateUserWithKey($this->mysql, $this->username, "badKey", "newPass");
+        
+        //Check that the password was not changed.
+        $newPass = getOneValueFromUserList($this->mysql, "password", $this->username);                
+        $this->assertEqual($newPass, crypt($this->password, $newPass) );
+        
+        //Check that the verification key and expiration have been cleared
+        $verificationKey = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);                
+        $this->assertEqual($verificationKey, "0" );
+        $verificationKeyExp = getOneValueFromUserList($this->mysql, "verificationKeyExpiration", $this->username);                
+        $this->assertEqual($verificationKeyExp, NULL );
+    }           
 }

@@ -156,5 +156,28 @@ class UserManagementTest extends WebTestCase {
         $newPass = getOneValueFromUserList($this->mysql, "password", $this->username);                
         $this->assertEqual($newPass, crypt("newPass", $newPass) );        
     }
-     
+    
+    function testSetNewPassBadKey()
+    {        
+        insertUser($this->mysql, $this->username, $this->password,
+               $this->email);   
+        resetPassword( $this->mysql, $this->username, "newKey" );                                        
+        
+        //And set a new password
+        $this->get( getbaseURL(). "setNewPassword.php?" .
+                "username=$this->username&".
+                "verificationKey=badKey&".
+                "newPassword=newPass" );
+        $this->assertText( 'BAD_VERIFICATION_KEY' );
+        
+        //And check that the old password is still set        
+        $newPass = getOneValueFromUserList($this->mysql, "password", $this->username);                
+        $this->assertEqual($newPass, crypt($this->password, $newPass) );        
+        
+        //Check that the verification key and expiration have been cleared
+        $verificationKey = getOneValueFromUserList($this->mysql, "verificationKey", $this->username);                
+        $this->assertEqual($verificationKey, "0" );
+        $verificationKeyExp = getOneValueFromUserList($this->mysql, "verificationKeyExpiration", $this->username);                
+        $this->assertEqual($verificationKeyExp, NULL );
+    }         
 }
