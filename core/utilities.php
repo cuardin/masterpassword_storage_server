@@ -116,7 +116,7 @@ function getParameter($mysql, $paramName) {
     }
     
     $rawValue = urldecode($rawValue);
-    return $mysql->real_escape_string($rawValue);
+    return $rawValue; //$mysql->real_escape_string($rawValue);
 }
 
 function checkUserEditKeyOrRECAPTCHA($mysql) {

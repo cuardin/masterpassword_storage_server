@@ -52,8 +52,10 @@ function sendPasswordResetEmail($email,$mailer,$username,$verificationKey)
     $headers = "From: masterpassword@armyr.se\r\n";        
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+    $usernameCode = urlencode($username);
     
-    $url = getBaseURL() . "../java_script/form/setNewPassword.php?verificationKey=$verificationKey&username=$username"; 
+    $url = getBaseURL() . "../java_script/form/setNewPassword.php?verificationKey=$verificationKey&username=$usernameCode"; 
+    error_log( $url );
     
     $message = '<html>'            
             . '<body>'
